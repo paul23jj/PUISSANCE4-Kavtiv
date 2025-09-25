@@ -18,3 +18,4 @@ func New() *http.ServeMux {
 
 	return mux // On retourne le routeur configuré
 }
+h
