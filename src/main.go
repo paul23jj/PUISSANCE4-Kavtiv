@@ -3,12 +3,13 @@ package main
 import (
 	"fmt"
 	"net/http"
-	"power4/router"
+
+	"./routeur"
 )
 
 func main() {
 	// Charge le routeur
-	r := router.New()
+	r := routeur.New()
 
 	fmt.Println("🚀 Serveur démarré sur http://localhost:8080")
 	http.ListenAndServe(":8080", r)
