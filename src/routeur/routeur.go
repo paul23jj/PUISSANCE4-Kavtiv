@@ -1,21 +1,44 @@
 package routeur
 
 import (
+	"encoding/json"
 	"net/http"
 
-	"../controller"
 	"../pion"
 )
 
-// New crée et retourne un nouvel objet ServeMux configuré avec les routes de l'application
 func New() *http.ServeMux {
+	mux := http.NewServeMux()
 
-	mux := http.NewServeMux() // Création d'un nouveau ServeMux, qui est un routeur simple pour les requêtes HTTP
+	// Route pour jouer un coup
+	mux.HandleFunc("/play", func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != http.MethodPost {
+			http.Error(w, "Méthode non autorisée", http.StatusMethodNotAllowed)
+			return
+		}
 
-	// On associe les chemins URL à des fonctions spécifiques du controller
-	mux.HandleFunc("/", controller.Home)           // "/" correspond à la page d'accueil. Appelle la fonction Home du controller
-	mux.HandleFunc("/about", controller.About)     // "/about" correspond à la page "À propos". Appelle la fonction About
-	mux.HandleFunc("/contact", controller.Contact) // "/contact" correspond à la page de contact. Appelle la fonction Contact
+		var data struct {
+			Col int `json:"col"`
+		}
+		err := json.NewDecoder(r.Body).Decode(&data)
+		if err != nil {
+			http.Error(w, "JSON invalide", http.StatusBadRequest)
+			return
+		}
 
-	return mux // On retourne le routeur configuré
+		err = game.PlayMove(data.Col)
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusBadRequest)
+			return
+		}
+
+		json.NewEncoder(w).Encode(game.GetState())
+	})
+
+	// Route pour récupérer l'état du plateau
+	mux.HandleFunc("/state", func(w http.ResponseWriter, r *http.Request) {
+		json.NewEncoder(w).Encode(game.GetState())
+	})
+
+	return mux
 }

@@ -1,4 +1,4 @@
-package main
+package pion
 
 import "fmt"
 
@@ -77,7 +77,7 @@ func (b *Board) GameState(lastRow, lastCol, player int) string {
 }
 
 // Exemple d’utilisation
-func main() {
+func ExampleUsage() {
 	var board Board
 
 	// Joueur 1 joue en colonne 3
