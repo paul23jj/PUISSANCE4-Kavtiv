@@ -2,8 +2,7 @@ package routeur
 
 import (
 	"net/http"
-
-	"../controller"
+	"puissance4/controller"
 )
 
 // New crée et retourne un nouvel objet ServeMux configuré avec les routes de l'application
