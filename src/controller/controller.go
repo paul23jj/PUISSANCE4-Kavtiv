@@ -51,3 +51,4 @@ func Contact(w http.ResponseWriter, r *http.Request) {
 	}
 	renderTemplate(w, "contact.html", data)
 }
+h
