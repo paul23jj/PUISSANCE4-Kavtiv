@@ -4,11 +4,14 @@ import (
 	"encoding/json"
 	"net/http"
 
-	"../pion"
+	"puissance4/pion"
 )
 
 func New() *http.ServeMux {
 	mux := http.NewServeMux()
+
+	// 🌟 Création d'une instance du jeu (si nécessaire)
+	game := pion.NewGame() // 🌟 nouvelle ligne — à adapter selon ton package "pion"
 
 	// Route pour jouer un coup
 	mux.HandleFunc("/play", func(w http.ResponseWriter, r *http.Request) {
@@ -20,24 +23,28 @@ func New() *http.ServeMux {
 		var data struct {
 			Col int `json:"col"`
 		}
+
 		err := json.NewDecoder(r.Body).Decode(&data)
 		if err != nil {
 			http.Error(w, "JSON invalide", http.StatusBadRequest)
 			return
 		}
 
-		err = game.PlayMove(data.Col)
+		// 🌟 Appel de la méthode PlayMove sur l'instance du jeu
+		err = game.PlayMove(data.Col) // 🌟 nouvelle ligne
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusBadRequest)
 			return
 		}
 
-		json.NewEncoder(w).Encode(game.GetState())
+		// 🌟 Encode l'état du jeu après le coup
+		json.NewEncoder(w).Encode(game.GetState()) // 🌟 nouvelle ligne
 	})
 
 	// Route pour récupérer l'état du plateau
 	mux.HandleFunc("/state", func(w http.ResponseWriter, r *http.Request) {
-		json.NewEncoder(w).Encode(game.GetState())
+		// 🌟 Encode l'état actuel du jeu
+		json.NewEncoder(w).Encode(game.GetState()) // 🌟 nouvelle ligne
 	})
 
 	return mux

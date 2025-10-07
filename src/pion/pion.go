@@ -11,7 +11,48 @@ type Board struct {
 	Grid [Rows][Cols]int // 0 vide, 1 joueur1, 2 joueur2
 }
 
-// Ajouter un pion dans une colonne
+// 🌟 Structure qui gère une partie
+type Game struct {
+	Board     Board `json:"board"`  // état du plateau
+	Player    int   `json:"player"` // joueur courant (1 ou 2)
+	LastState string `json:"state"` // "En cours", "Victoire joueur X", "Match nul"
+}
+
+// 🌟 Constructeur d’une nouvelle partie
+func NewGame() *Game {
+	return &Game{
+		Player: 1, // joueur 1 commence
+	}
+}
+
+// 🌟 Joue un coup dans une colonne donnée
+func (g *Game) PlayMove(col int) error {
+	ok, r, c := g.Board.Drop(col, g.Player)
+	if !ok {
+		return fmt.Errorf("colonne %d pleine ou invalide", col)
+	}
+
+	// Met à jour l’état du jeu
+	g.LastState = g.Board.GameState(r, c, g.Player)
+
+	// Change de joueur si la partie continue
+	if g.LastState == "En cours" {
+		if g.Player == 1 {
+			g.Player = 2
+		} else {
+			g.Player = 1
+		}
+	}
+
+	return nil
+}
+
+// 🌟 Retourne l’état complet du jeu (pour l’API JSON)
+func (g *Game) GetState() interface{} {
+	return g
+}
+
+// --- Ton code original ---
 func (b *Board) Drop(col, player int) (bool, int, int) {
 	if col < 0 || col >= Cols {
 		return false, -1, -1
@@ -25,7 +66,6 @@ func (b *Board) Drop(col, player int) (bool, int, int) {
 	return false, -1, -1 // colonne pleine
 }
 
-// Vérifie si un joueur a gagné à partir d’une position
 func (b *Board) IsWin(r, c int) bool {
 	player := b.Grid[r][c]
 	if player == 0 {
@@ -55,7 +95,6 @@ func (b *Board) checkLine(r, c, dr, dc, player int) int {
 	return count
 }
 
-// Vérifie si le plateau est plein
 func (b *Board) IsFull() bool {
 	for c := 0; c < Cols; c++ {
 		if b.Grid[0][c] == 0 {
@@ -65,7 +104,6 @@ func (b *Board) IsFull() bool {
 	return true
 }
 
-// Renvoie l’état du jeu
 func (b *Board) GameState(lastRow, lastCol, player int) string {
 	if lastRow >= 0 && lastCol >= 0 && b.IsWin(lastRow, lastCol) {
 		return fmt.Sprintf("Victoire joueur %d", player)
@@ -76,19 +114,16 @@ func (b *Board) GameState(lastRow, lastCol, player int) string {
 	return "En cours"
 }
 
-// Exemple d’utilisation
 func ExampleUsage() {
 	var board Board
 
-	// Joueur 1 joue en colonne 3
 	ok, r, c := board.Drop(3, 1)
 	if ok {
-		fmt.Println(board.GameState(r, c, 1)) // → "En cours"
+		fmt.Println(board.GameState(r, c, 1))
 	}
 
-	// Joueur 2 joue en colonne 3
 	ok, r, c = board.Drop(3, 2)
 	if ok {
-		fmt.Println(board.GameState(r, c, 2)) // → "En cours"
+		fmt.Println(board.GameState(r, c, 2))
 	}
 }
