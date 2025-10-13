@@ -7,22 +7,53 @@
     <link rel="stylesheet" href="../css/styles.css">
 </head>
 <body>
+
     <h1 class="title">Puissance 4</h1>
     <section class="pion-selection">
         <h2>Choisis ton pion</h2>
     <div class="pions">
     <label><input type="radio" name="pion" value="1" required> <img src="../images/sdm.jpg" alt="SDM" width="64"></label>
-    <label><input type="radio" name="pion" value="2"> <img src="../images/kaaris.webp" alt="pion 2" width="64"></label>
-    <label><input type="radio" name="pion" value="3"> <img src="../images/booba.png" alt="pion 3" width="64"></label>
-    <label><input type="radio" name="pion" value="4"> <img src="../images/naps.jpg" alt="pion 4" width="64"></label>
-    <label><input type="radio" name="pion" value="5"> <img src="../images/damso.jpg" alt="pion 5" width="64"></label>
-    <label><input type="radio" name="pion" value="6"> <img src="../images/tiako.jpg" alt="pion 6" width="64"></label>
-    <label><input type="radio" name="pion" value="7"> <img src="../images/leto.jpg" alt="pion 7" width="64"></label>
-    <label><input type="radio" name="pion" value="8"> <img src="../images/plk.jpg" alt="pion 8" width="64"></label>
-    <label><input type="radio" name="pion" value="9"> <img src="../images/niska.jpg" alt="pion 9" width="64"></label>
-    <label><input type="radio" name="pion" value="10"> <img src="../images/jul.jpg" alt="pion 10" width="64"></label>
+    <label><input type="radio" name="pion" value="2"> <img src="../images/kaaris.webp" alt="Karis" width="64"></label>
+    <label><input type="radio" name="pion" value="3"> <img src="../images/booba.png" alt="Booba" width="64"></label>
+    <label><input type="radio" name="pion" value="4"> <img src="../images/naps.jpg" alt="Naps" width="64"></label>
+    <label><input type="radio" name="pion" value="5"> <img src="../images/damso.jpg" alt="Damso" width="64"></label>
+    <label><input type="radio" name="pion" value="6"> <img src="../images/tiako.jpg" alt="Tiako" width="64"></label>
+    <label><input type="radio" name="pion" value="7"> <img src="../images/leto.jpg" alt="Leto" width="64"></label>
+    <label><input type="radio" name="pion" value="8"> <img src="../images/plk.jpg" alt="PLK" width="64"></label>
+    <label><input type="radio" name="pion" value="9"> <img src="../images/niska.jpg" alt="Niska" width="64"></label>
+    <label><input type="radio" name="pion" value="10"> <img src="../images/jul.jpg" alt="Jul" width="64"></label>
     </div>
         <p>Joueur sélectionné: <span id="selected-player">aucun</span></p>
+    </section>
+    
+    <section class="game">
+        <h2>Plateau</h2>
+        <p>État : {{ .State }} - Joueur courant : {{ .Player }}</p>
+
+        <!-- Formulaire HTML pour jouer une colonne (POST standard) -->
+        <form method="post" action="/play">
+            <div class="controls">
+                <button type="submit" name="col" value="0">1</button>
+                <button type="submit" name="col" value="1">2</button>
+                <button type="submit" name="col" value="2">3</button>
+                <button type="submit" name="col" value="3">4</button>
+                <button type="submit" name="col" value="4">5</button>
+                <button type="submit" name="col" value="5">6</button>
+                <button type="submit" name="col" value="6">7</button>
+            </div>
+        </form>
+
+        <table class="puissance4">
+            <tbody>
+            {{ range $rIndex, $row := .Grid }}
+                <tr>
+                {{ range $cIndex, $cell := $row }}
+                    <td class="cell">{{ if eq $cell 1 }}🔴{{ else if eq $cell 2 }}🟡{{ else }}&nbsp;{{ end }}</td>
+                {{ end }}
+                </tr>
+            {{ end }}
+            </tbody>
+        </table>
     </section>
 </body>
 </html>

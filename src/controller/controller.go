@@ -7,53 +7,57 @@ import (
 	"net/http"
 	"os"
 	"path/filepath"
+	"puissance4/pion"
 )
 
 // renderTemplate est une fonction utilitaire pour afficher un template HTML avec des données dynamiques
-func renderTemplate(w http.ResponseWriter, filename string, data map[string]string) {
+func renderTemplate(w http.ResponseWriter, filename string, data interface{}) {
 	tmpl := template.Must(template.ParseFiles("template/" + filename)) // Charge le fichier template depuis le dossier "template"
 	tmpl.Execute(w, data)                                              // Exécute le template et écrit le résultat dans la réponse HTTP
 }
 
+// instance du jeu (injectée depuis le routeur)
+var gameInstance *pion.Game
+
+// SetGame permet d'injecter une instance de jeu pour le rendu côté serveur
+func SetGame(g *pion.Game) {
+	gameInstance = g
+}
+
 // Home gère la page d'accueil
 func Home(w http.ResponseWriter, r *http.Request) {
-	data := map[string]string{
-		"Title":   "Accueil",                           // Titre de la page
-		"Message": "Bienvenue sur la page d'accueil 🎉", // Message affiché dans le template
+	// Si le formulaire HTML envoie une colonne via POST, on redirige vers /play pour traitement
+	if r.Method == http.MethodPost {
+		r.ParseForm()
+		// rediriger vers /play en POST standard (routeur gère form ou JSON)
+		http.Redirect(w, r, "/", http.StatusSeeOther)
+		return
 	}
-	renderTemplate(w, "index.html", data) // Affiche le template index.html avec les données
-}
 
-// About gère la page "À propos"
-func About(w http.ResponseWriter, r *http.Request) {
-	data := map[string]string{
-		"Title":   "À propos",
-		"Message": "Ceci est la page À propos ✨",
+	// Préparer les données pour le template : grille et état du jeu
+	type ViewData struct {
+		Title   string
+		Message string
+		Grid    [][]int
+		Player  int
+		State   string
 	}
-	renderTemplate(w, "about.html", data) // Affiche le template about.html avec les données
-}
 
-// Contact gère la page de contact
-func Contact(w http.ResponseWriter, r *http.Request) {
-	if r.Method == http.MethodPost { // Si le formulaire est soumis en POST
-		// Récupération des données du formulaire
-		name := r.FormValue("name") // Récupère le champ "name"
-		msg := r.FormValue("msg")   // Récupère le champ "msg"
-
-		data := map[string]string{
-			"Title":   "Contact",
-			"Message": "Merci " + name + " pour ton message : " + msg, // Message personnalisé après soumission
+	vd := ViewData{Title: "Accueil", Message: "Bienvenue sur la page d'accueil 🎉", Grid: make([][]int, 6)}
+	if gameInstance != nil {
+		// copier la grille
+		for r := 0; r < 6; r++ {
+			row := make([]int, 7)
+			for c := 0; c < 7; c++ {
+				row[c] = int(gameInstance.Board.Grid[r][c])
+			}
+			vd.Grid[r] = row
 		}
-		renderTemplate(w, "contact.html", data)
-		return // On termine ici pour ne pas exécuter la partie GET
+		vd.Player = gameInstance.Player
+		vd.State = gameInstance.LastState
 	}
 
-	// Si ce n'est pas un POST, on affiche simplement le formulaire
-	data := map[string]string{
-		"Title":   "Contact",
-		"Message": "Envoie-nous un message 📩",
-	}
-	renderTemplate(w, "contact.html", data)
+	renderTemplate(w, "index.html", vd) // Affiche le template index.html avec les données
 }
 
 // Joueur affiche et gère le formulaire de sélection du joueur (prénom + pion)
