@@ -36,14 +36,31 @@ func Home(w http.ResponseWriter, r *http.Request) {
 
 	// Préparer les données pour le template : grille et état du jeu
 	type ViewData struct {
-		Title   string
-		Message string
-		Grid    [][]int
-		Player  int
-		State   string
+		Title    string
+		Message  string
+		Grid     [][]int
+		Player   int
+		State    string
+		Name1    string
+		Name2    string
+		PawnImg1 string
+		PawnImg2 string
 	}
 
-	vd := ViewData{Title: "Accueil", Message: "Bienvenue sur la page d'accueil 🎉", Grid: make([][]int, 6)}
+	vd := ViewData{Title: "Accueil", Message: "Bienvenue sur la page d'accueil 🎉", Grid: make([][]int, 6), PawnImg1: "/images/pawn1.svg", PawnImg2: "/images/pawn2.svg"}
+	// essayer récupérer noms/pions depuis cookies
+	if c, err := r.Cookie("nomJoueur1"); err == nil {
+		vd.Name1 = c.Value
+	}
+	if c, err := r.Cookie("nomJoueur2"); err == nil {
+		vd.Name2 = c.Value
+	}
+	if c, err := r.Cookie("pionJoueur1"); err == nil {
+		vd.PawnImg1 = "/images/" + c.Value
+	}
+	if c, err := r.Cookie("pionJoueur2"); err == nil {
+		vd.PawnImg2 = "/images/" + c.Value
+	}
 	if gameInstance != nil {
 		// copier la grille
 		for r := 0; r < 6; r++ {
@@ -70,6 +87,7 @@ func Joueur(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
+		joueur := r.FormValue("joueur")
 		name := r.FormValue("name")
 		pion := r.FormValue("pion")
 
@@ -88,7 +106,8 @@ func Joueur(w http.ResponseWriter, r *http.Request) {
 				ext = ".png"
 			}
 
-			outPath := filepath.Join(imagesDir, fmt.Sprintf("pawn%s%s", pion, ext))
+			// enregistrer sous pawn{joueur}{ext}
+			outPath := filepath.Join(imagesDir, fmt.Sprintf("pawn%s%s", joueur, ext))
 
 			outFile, err := os.Create(outPath)
 			if err == nil {
@@ -98,8 +117,17 @@ func Joueur(w http.ResponseWriter, r *http.Request) {
 		}
 
 		// Enregistrer le choix dans des cookies simples (pour usage client)
-		http.SetCookie(w, &http.Cookie{Name: "nomJoueur", Value: name, Path: "/"})
-		http.SetCookie(w, &http.Cookie{Name: "pionJoueur", Value: pion, Path: "/"})
+		// Enregistrer cookies spécifiques au joueur (1 ou 2)
+		if joueur == "2" {
+			http.SetCookie(w, &http.Cookie{Name: "nomJoueur2", Value: name, Path: "/"})
+			// déterminer le nom d'image du pion choisi
+			img := fmt.Sprintf("pawn%s.svg", pion)
+			http.SetCookie(w, &http.Cookie{Name: "pionJoueur2", Value: img, Path: "/"})
+		} else {
+			http.SetCookie(w, &http.Cookie{Name: "nomJoueur1", Value: name, Path: "/"})
+			img := fmt.Sprintf("pawn%s.svg", pion)
+			http.SetCookie(w, &http.Cookie{Name: "pionJoueur1", Value: img, Path: "/"})
+		}
 
 		data := map[string]string{
 			"Title":   "Joueur enregistré",

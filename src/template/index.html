@@ -29,6 +29,7 @@
     <section class="game">
         <h2>Plateau</h2>
         <p>État : {{ .State }} - Joueur courant : {{ .Player }}</p>
+        <p>Joueur 1 : {{ .Name1 }} <img src="{{ .PawnImg1 }}" alt="pion1" width="32"> &nbsp; | &nbsp; Joueur 2 : {{ .Name2 }} <img src="{{ .PawnImg2 }}" alt="pion2" width="32"></p>
 
         <!-- Formulaire HTML pour jouer une colonne (POST standard) -->
         <form method="post" action="/play">
@@ -48,7 +49,7 @@
             {{ range $rIndex, $row := .Grid }}
                 <tr>
                 {{ range $cIndex, $cell := $row }}
-                    <td class="cell">{{ if eq $cell 1 }}🔴{{ else if eq $cell 2 }}🟡{{ else }}&nbsp;{{ end }}</td>
+                    <td class="cell">{{ if eq $cell 1 }}<img src="{{ $.PawnImg1 }}" alt="p1" width="32">{{ else if eq $cell 2 }}<img src="{{ $.PawnImg2 }}" alt="p2" width="32">{{ else }}&nbsp;{{ end }}</td>
                 {{ end }}
                 </tr>
             {{ end }}
