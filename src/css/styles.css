@@ -1,0 +1,10 @@
+.fond{
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    color: white;
+    text-shadow: 1px 1px 2px black;
+}
