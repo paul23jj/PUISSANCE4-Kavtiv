@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"net/http"
 
+	"puissance4/controller"
 	"puissance4/pion"
 )
 
@@ -51,6 +52,12 @@ func New() *http.ServeMux {
 		// 🌟 Encode l'état actuel du jeu
 		json.NewEncoder(w).Encode(game.GetState()) // 🌟 nouvelle ligne
 	})
+
+	// Pages templates basiques
+	mux.HandleFunc("/", controller.Home)
+	mux.HandleFunc("/about", controller.About)
+	mux.HandleFunc("/contact", controller.Contact)
+	mux.HandleFunc("/player", controller.Player)
 
 	return mux
 }

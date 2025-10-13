@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ .Title }}</title>
+    <link rel="stylesheet" href="/static/styles.css">
+</head>
+<body>
+<h1>{{ .Title }}</h1>
+<p>{{ .Message }}</p>
+
+<form method="post" action="/player">
+    <label for="name">Prénom :</label><br>
+    <input type="text" id="name" name="name" required><br><br>
+
+    <label>Pion :</label><br>
+    <select name="pawn">
+        <option value="🔴 Rouge">🔴 Rouge</option>
+        <option value="🟡 Jaune">🟡 Jaune</option>
+        <option value="⚪ Blanc">⚪ Blanc</option>
+    </select><br><br>
+
+    <button type="submit">Enregistrer</button>
+</form>
+
+<nav>
+    <a href="/">Accueil</a> |
+    <a href="/about">À propos</a> |
+    <a href="/contact">Contact</a>
+</nav>
+</body>
+</html>

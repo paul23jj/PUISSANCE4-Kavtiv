@@ -51,3 +51,28 @@ func Contact(w http.ResponseWriter, r *http.Request) {
 	}
 	renderTemplate(w, "contact.html", data)
 }
+
+// Player affiche et gère le formulaire de sélection de joueur (prénom + pion)
+func Player(w http.ResponseWriter, r *http.Request) {
+	if r.Method == http.MethodPost {
+		name := r.FormValue("name")
+		pawn := r.FormValue("pawn")
+
+		// Enregistrer le choix dans des cookies simples (pour usage client)
+		http.SetCookie(w, &http.Cookie{Name: "playerName", Value: name, Path: "/"})
+		http.SetCookie(w, &http.Cookie{Name: "playerPawn", Value: pawn, Path: "/"})
+
+		data := map[string]string{
+			"Title":   "Joueur enregistré",
+			"Message": "Merci " + name + ". Tu as choisi le pion " + pawn + ".",
+		}
+		renderTemplate(w, "player.html", data)
+		return
+	}
+
+	data := map[string]string{
+		"Title":   "Sélection du joueur",
+		"Message": "Choisis ton pion et entre ton prénom",
+	}
+	renderTemplate(w, "player.html", data)
+}
