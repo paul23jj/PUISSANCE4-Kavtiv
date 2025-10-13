@@ -4,12 +4,24 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Puissance 4</title>
-    <link rel="stylesheet" href="/styles.css">
+    <link rel="stylesheet" href="/static/styles.css">
 </head>
 <body>
 <h1 class="title">Puissance 4</h1>
 <div class="fond">
-    <img src="../images/kavtiv.png" alt="fond">
+    <img src="/images/kavtiv.png" alt="fond" class="fond-image">
 </div>
+
+<section class="pion-selection">
+    <h2>Choisis ton pion</h2>
+    <div class="pions">
+        <button class="pion" data-value="1">🔴 Rouge</button>
+        <button class="pion" data-value="2">🟡 Jaune</button>
+        <button class="pion" data-value="3">⚪ Blanc</button>
+    </div>
+    <p>Joueur sélectionné: <span id="selected-player">aucun</span></p>
+</section>
+
+<script src="/static/game.js"></script>
 </body>
 </html>

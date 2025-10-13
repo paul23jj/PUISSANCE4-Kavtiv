@@ -13,6 +13,11 @@ func New() *http.ServeMux {
 	// 🌟 Création d'une instance du jeu (si nécessaire)
 	game := pion.NewGame() // 🌟 nouvelle ligne — à adapter selon ton package "pion"
 
+	// Serve files statiques (CSS/JS/images)
+	// expose /static/ -> src/static/ and /images/ -> src/images/
+	mux.Handle("/static/", http.StripPrefix("/static/", http.FileServer(http.Dir("src/static"))))
+	mux.Handle("/images/", http.StripPrefix("/images/", http.FileServer(http.Dir("src/images"))))
+
 	// Route pour jouer un coup
 	mux.HandleFunc("/play", func(w http.ResponseWriter, r *http.Request) {
 		if r.Method != http.MethodPost {
