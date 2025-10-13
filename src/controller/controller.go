@@ -56,8 +56,8 @@ func Contact(w http.ResponseWriter, r *http.Request) {
 	renderTemplate(w, "contact.html", data)
 }
 
-// Player affiche et gère le formulaire de sélection de joueur (prénom + pion)
-func Player(w http.ResponseWriter, r *http.Request) {
+// Joueur affiche et gère le formulaire de sélection du joueur (prénom + pion)
+func Joueur(w http.ResponseWriter, r *http.Request) {
 	if r.Method == http.MethodPost {
 		// Accepte un formulaire multipart pour un upload optionnel de fichier
 		err := r.ParseMultipartForm(10 << 20) // 10 MB
@@ -67,7 +67,7 @@ func Player(w http.ResponseWriter, r *http.Request) {
 		}
 
 		name := r.FormValue("name")
-		pawn := r.FormValue("pawn")
+		pion := r.FormValue("pion")
 
 		// Si un fichier a été uploadé sous le champ 'photo', on l'enregistre dans src/images/pawn{N}.ext
 		file, header, err := r.FormFile("photo")
@@ -84,7 +84,7 @@ func Player(w http.ResponseWriter, r *http.Request) {
 				ext = ".png"
 			}
 
-			outPath := filepath.Join(imagesDir, fmt.Sprintf("pawn%s%s", pawn, ext))
+			outPath := filepath.Join(imagesDir, fmt.Sprintf("pawn%s%s", pion, ext))
 
 			outFile, err := os.Create(outPath)
 			if err == nil {
@@ -94,12 +94,12 @@ func Player(w http.ResponseWriter, r *http.Request) {
 		}
 
 		// Enregistrer le choix dans des cookies simples (pour usage client)
-		http.SetCookie(w, &http.Cookie{Name: "playerName", Value: name, Path: "/"})
-		http.SetCookie(w, &http.Cookie{Name: "playerPawn", Value: pawn, Path: "/"})
+		http.SetCookie(w, &http.Cookie{Name: "nomJoueur", Value: name, Path: "/"})
+		http.SetCookie(w, &http.Cookie{Name: "pionJoueur", Value: pion, Path: "/"})
 
 		data := map[string]string{
 			"Title":   "Joueur enregistré",
-			"Message": "Merci " + name + ". Tu as choisi le pion " + pawn + ".",
+			"Message": "Merci " + name + ". Tu as choisi le pion " + pion + ".",
 		}
 		renderTemplate(w, "player.html", data)
 		return

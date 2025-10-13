@@ -9,32 +9,31 @@
 <h1>{{ .Title }}</h1>
 <p>{{ .Message }}</p>
 
-<form method="post" action="/player" enctype="multipart/form-data">
+<form method="post" action="/joueur" enctype="multipart/form-data">
     <label for="name">Prénom :</label><br>
     <input type="text" id="name" name="name" required><br><br>
 </form>
 
 <h2>Choisis un pion (1..10)</h2>
-<form method="post" action="/player" enctype="multipart/form-data">
+    <form method="post" action="/joueur" enctype="multipart/form-data">
     <label for="name">Prénom :</label><br>
     <input type="text" id="name" name="name" required><br><br>
 
     <div class="pawn-grid">
-        <label><input type="radio" name="pawn" value="1" required> <img src="/images/pawn1.svg" alt="pion 1" width="64"></label>
-        <label><input type="radio" name="pawn" value="2"> <img src="/images/pawn2.svg" alt="pion 2" width="64"></label>
-        <label><input type="radio" name="pawn" value="3"> <img src="/images/pawn3.svg" alt="pion 3" width="64"></label>
-        <label><input type="radio" name="pawn" value="4"> <img src="/images/pawn4.svg" alt="pion 4" width="64"></label>
-        <label><input type="radio" name="pawn" value="5"> <img src="/images/pawn5.svg" alt="pion 5" width="64"></label>
-        <label><input type="radio" name="pawn" value="6"> <img src="/images/pawn6.svg" alt="pion 6" width="64"></label>
-        <label><input type="radio" name="pawn" value="7"> <img src="/images/pawn7.svg" alt="pion 7" width="64"></label>
-        <label><input type="radio" name="pawn" value="8"> <img src="/images/pawn8.svg" alt="pion 8" width="64"></label>
-        <label><input type="radio" name="pawn" value="9"> <img src="/images/pawn9.svg" alt="pion 9" width="64"></label>
-        <label><input type="radio" name="pawn" value="10"> <img src="/images/pawn10.svg" alt="pion 10" width="64"></label>
+    <label><input type="radio" name="pion" value="1" required> <img src="../images/sdm.jpg" alt="SDM" width="64"></label>
+    <label><input type="radio" name="pion" value="2"> <img src="../images/kaaris.webp" alt="pion 2" width="64"></label>
+    <label><input type="radio" name="pion" value="3"> <img src="../images/booba.png" alt="pion 3" width="64"></label>
+    <label><input type="radio" name="pion" value="4"> <img src="../images/naps.jpg" alt="pion 4" width="64"></label>
+    <label><input type="radio" name="pion" value="5"> <img src="../images/damso.jpg" alt="pion 5" width="64"></label>
+    <label><input type="radio" name="pion" value="6"> <img src="../images/tiako.jpg" alt="pion 6" width="64"></label>
+    <label><input type="radio" name="pion" value="7"> <img src="../images/leto.jpg" alt="pion 7" width="64"></label>
+    <label><input type="radio" name="pion" value="8"> <img src="../images/plk.jpg" alt="pion 8" width="64"></label>
+    <label><input type="radio" name="pion" value="9"> <img src="../images/niska.jpg" alt="pion 9" width="64"></label>
+    <label><input type="radio" name="pion" value="10"> <img src="../images/jul.jpg" alt="pion 10" width="64"></label>
     </div>
 
     <p>Ou téléverse une photo pour remplacer le pion sélectionné :</p>
     <input type="file" name="photo" accept="image/*"><br><br>
-
     <button type="submit">Enregistrer</button>
 </form>
 </form>

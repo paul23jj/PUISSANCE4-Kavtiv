@@ -57,7 +57,7 @@ func New() *http.ServeMux {
 	mux.HandleFunc("/", controller.Home)
 	mux.HandleFunc("/about", controller.About)
 	mux.HandleFunc("/contact", controller.Contact)
-	mux.HandleFunc("/player", controller.Player)
+	mux.HandleFunc("/joueur", controller.Joueur)
 
 	return mux
 }
