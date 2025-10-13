@@ -11,7 +11,7 @@ func (b *Board) Drop(col int, player int) (bool, int, int) {
 }
 
 func (b *Board) GameState(row int, col int, player int) string {
-	return fmt.Sprintf("Player %d played at (%d, %d)", player, row, col)
+	return fmt.Sprintf("Joueur %d a joué en (%d, %d)", player, row, col)
 }
 
 func main() {

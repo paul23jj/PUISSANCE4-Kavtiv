@@ -1,8 +1,12 @@
 package controller
 
 import (
+	"fmt"
 	"html/template"
+	"io"
 	"net/http"
+	"os"
+	"path/filepath"
 )
 
 // renderTemplate est une fonction utilitaire pour afficher un template HTML avec des données dynamiques
@@ -55,8 +59,39 @@ func Contact(w http.ResponseWriter, r *http.Request) {
 // Player affiche et gère le formulaire de sélection de joueur (prénom + pion)
 func Player(w http.ResponseWriter, r *http.Request) {
 	if r.Method == http.MethodPost {
+		// Accepte un formulaire multipart pour un upload optionnel de fichier
+		err := r.ParseMultipartForm(10 << 20) // 10 MB
+		if err != nil {
+			http.Error(w, "Erreur formulaire: "+err.Error(), http.StatusBadRequest)
+			return
+		}
+
 		name := r.FormValue("name")
 		pawn := r.FormValue("pawn")
+
+		// Si un fichier a été uploadé sous le champ 'photo', on l'enregistre dans src/images/pawn{N}.ext
+		file, header, err := r.FormFile("photo")
+		if err == nil && file != nil {
+			defer file.Close()
+
+			// S'assure que le dossier images existe
+			imagesDir := "src/images"
+			os.MkdirAll(imagesDir, 0755)
+
+			// devine l'extension à partir du nom de fichier uploadé
+			ext := filepath.Ext(header.Filename)
+			if ext == "" {
+				ext = ".png"
+			}
+
+			outPath := filepath.Join(imagesDir, fmt.Sprintf("pawn%s%s", pawn, ext))
+
+			outFile, err := os.Create(outPath)
+			if err == nil {
+				defer outFile.Close()
+				io.Copy(outFile, file)
+			}
+		}
 
 		// Enregistrer le choix dans des cookies simples (pour usage client)
 		http.SetCookie(w, &http.Cookie{Name: "playerName", Value: name, Path: "/"})

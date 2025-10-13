@@ -9,18 +9,34 @@
 <h1>{{ .Title }}</h1>
 <p>{{ .Message }}</p>
 
-<form method="post" action="/player">
+<form method="post" action="/player" enctype="multipart/form-data">
+    <label for="name">Prénom :</label><br>
+    <input type="text" id="name" name="name" required><br><br>
+</form>
+
+<h2>Choisis un pion (1..10)</h2>
+<form method="post" action="/player" enctype="multipart/form-data">
     <label for="name">Prénom :</label><br>
     <input type="text" id="name" name="name" required><br><br>
 
-    <label>Pion :</label><br>
-    <select name="pawn">
-        <option value="🔴 Rouge">🔴 Rouge</option>
-        <option value="🟡 Jaune">🟡 Jaune</option>
-        <option value="⚪ Blanc">⚪ Blanc</option>
-    </select><br><br>
+    <div class="pawn-grid">
+        <label><input type="radio" name="pawn" value="1" required> <img src="/images/pawn1.svg" alt="pion 1" width="64"></label>
+        <label><input type="radio" name="pawn" value="2"> <img src="/images/pawn2.svg" alt="pion 2" width="64"></label>
+        <label><input type="radio" name="pawn" value="3"> <img src="/images/pawn3.svg" alt="pion 3" width="64"></label>
+        <label><input type="radio" name="pawn" value="4"> <img src="/images/pawn4.svg" alt="pion 4" width="64"></label>
+        <label><input type="radio" name="pawn" value="5"> <img src="/images/pawn5.svg" alt="pion 5" width="64"></label>
+        <label><input type="radio" name="pawn" value="6"> <img src="/images/pawn6.svg" alt="pion 6" width="64"></label>
+        <label><input type="radio" name="pawn" value="7"> <img src="/images/pawn7.svg" alt="pion 7" width="64"></label>
+        <label><input type="radio" name="pawn" value="8"> <img src="/images/pawn8.svg" alt="pion 8" width="64"></label>
+        <label><input type="radio" name="pawn" value="9"> <img src="/images/pawn9.svg" alt="pion 9" width="64"></label>
+        <label><input type="radio" name="pawn" value="10"> <img src="/images/pawn10.svg" alt="pion 10" width="64"></label>
+    </div>
+
+    <p>Ou téléverse une photo pour remplacer le pion sélectionné :</p>
+    <input type="file" name="photo" accept="image/*"><br><br>
 
     <button type="submit">Enregistrer</button>
+</form>
 </form>
 
 <nav>
