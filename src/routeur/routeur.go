@@ -11,6 +11,7 @@ import (
 
 func New() *http.ServeMux {
 	mux := http.NewServeMux()
+	mux.HandleFunc("/reset", controller.Reset)
 
 	// 🌟 Création d'une instance du jeu (si nécessaire)
 	game := pion.NewGame() // 🌟 nouvelle ligne — à adapter selon ton package "pion"
@@ -64,6 +65,13 @@ func New() *http.ServeMux {
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusBadRequest)
 			return
+		}
+		// Incrémente le score si victoire
+		if game.LastState == "Victoire joueur 1" {
+			controller.ScoreJoueur1++
+		}
+		if game.LastState == "Victoire joueur 2" {
+			controller.ScoreJoueur2++
 		}
 		json.NewEncoder(w).Encode(game.GetState())
 	})
