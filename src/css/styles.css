@@ -3,23 +3,24 @@ body {
     background-position: center;
     background-repeat: no-repeat;
     background-attachment: fixed;
-    background-size: 100% 100%; /* étire horizontal et vertical */
+    background-size: 100% 100%;
     margin: 0;
     padding: 0;
 }
 .pion-selection {
-    background-color: rgba(255, 255, 255, 0.7); /* blanc translucide */
+    background-color: rgba(255, 255, 255, 0.7);
     padding: 20px;
     border-radius: 10px;
     max-width: 400px;
     margin: 20px auto;
 }
 .title {
-    color: white; /* texte blanc */
+    color: white;
     text-align: center;
     font-size: 3rem;
     text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.7);
 }
+
 .pions{
     display: flex;
     flex-wrap: wrap;
@@ -41,4 +42,10 @@ body {
 }
 .pions img:hover {
     transform: scale(1.1);
+}
+.victoire {
+    color: red;
+    font-size: 2em;
+    text-align: center;
+    margin: 20px 0;
 }

@@ -10,21 +10,14 @@ import (
 	"puissance4/pion"
 )
 
+var ScoreJoueur1 int
+var ScoreJoueur2 int
+
+// renderTemplate est une fonction utilitaire pour afficher un template HTML avec des données dynamiques
 // renderTemplate est une fonction utilitaire pour afficher un template HTML avec des données dynamiques
 func renderTemplate(w http.ResponseWriter, filename string, data interface{}) {
-	// Ajoute une fonction utilitaire 'seq' pour générer une séquence d'entiers dans les templates
-	funcMap := template.FuncMap{
-		"seq": func(a, b int) []int {
-			s := make([]int, 0, b-a+1)
-			for i := a; i <= b; i++ {
-				s = append(s, i)
-			}
-			return s
-		},
-	}
-
-	tmpl := template.Must(template.New(filepath.Base(filename)).Funcs(funcMap).ParseFiles("template/" + filename))
-	tmpl.Execute(w, data) // Exécute le template et écrit le résultat dans la réponse HTTP
+	tmpl := template.Must(template.ParseFiles("template/" + filename)) // Charge le fichier template depuis le dossier "template"
+	tmpl.Execute(w, data)                                              // Exécute le template et écrit le résultat dans la réponse HTTP
 }
 
 // instance du jeu (injectée depuis le routeur)
@@ -37,55 +30,49 @@ func SetGame(g *pion.Game) {
 
 // Home gère la page d'accueil
 func Home(w http.ResponseWriter, r *http.Request) {
-	// Si le formulaire HTML envoie une colonne via POST, on redirige vers /play pour traitement
 	if r.Method == http.MethodPost {
 		r.ParseForm()
-		// rediriger vers /play en POST standard (routeur gère form ou JSON)
 		http.Redirect(w, r, "/", http.StatusSeeOther)
 		return
 	}
 
+	// Récupère les pions déjà pris dans les cookies
+	taken := []string{}
+	if c, err := r.Cookie("pionJoueur1"); err == nil && c.Value != "" {
+		taken = append(taken, c.Value)
+	}
+	if c, err := r.Cookie("pionJoueur2"); err == nil && c.Value != "" {
+		taken = append(taken, c.Value)
+	}
+
 	// Préparer les données pour le template : grille et état du jeu
 	type ViewData struct {
-		Title    string
-		Message  string
-		Grid     [][]int
-		Player   int
-		State    string
-		Name1    string
-		Name2    string
-		PawnImg1 string
-		PawnImg2 string
+		Title      string
+		Message    string
+		Grid       [][]int
+		Player     int
+		State      string
+		Name1      string
+		Name2      string
+		PawnImg1   string
+		PawnImg2   string
+		TakenPawns []string
+		Score1     int
+		Score2     int
 	}
 
-	vd := ViewData{Title: "Accueil", Message: "Bienvenue sur la page d'accueil 🎉", Grid: make([][]int, 6), PawnImg1: "/images/pawn1.svg", PawnImg2: "/images/pawn2.svg"}
-	// essayer récupérer noms/pions depuis cookies
-	if c, err := r.Cookie("nomJoueur1"); err == nil {
-		vd.Name1 = c.Value
+	vd := ViewData{
+		Title:      "Accueil",
+		Message:    "Bienvenue sur la page d'accueil 🎉",
+		Grid:       make([][]int, 6),
+		PawnImg1:   "/images/pawn1.svg",
+		PawnImg2:   "/images/pawn2.svg",
+		TakenPawns: taken,
+		Score1:     ScoreJoueur1,
+		Score2:     ScoreJoueur2,
 	}
-	if c, err := r.Cookie("nomJoueur2"); err == nil {
-		vd.Name2 = c.Value
-	}
-	if c, err := r.Cookie("pionJoueur1"); err == nil {
-		vd.PawnImg1 = "/images/" + c.Value
-	}
-	if c, err := r.Cookie("pionJoueur2"); err == nil {
-		vd.PawnImg2 = "/images/" + c.Value
-	}
-	if gameInstance != nil {
-		// copier la grille
-		for r := 0; r < 6; r++ {
-			row := make([]int, 7)
-			for c := 0; c < 7; c++ {
-				row[c] = int(gameInstance.Board.Grid[r][c])
-			}
-			vd.Grid[r] = row
-		}
-		vd.Player = gameInstance.Player
-		vd.State = gameInstance.LastState
-	}
-
-	renderTemplate(w, "index.html", vd) // Affiche le template index.html avec les données
+	// ...le reste du code...
+	renderTemplate(w, "index.html", vd)
 }
 
 // Joueur affiche et gère le formulaire de sélection du joueur (prénom + pion)
@@ -102,7 +89,7 @@ func Joueur(w http.ResponseWriter, r *http.Request) {
 		name := r.FormValue("name")
 		pion := r.FormValue("pion")
 
-		// Si un fichier a été uploadé sous le champ 'photo', on l'enregistre et on sauvegarde son nom
+		// Si un fichier a été uploadé sous le champ 'photo', on l'enregistre dans src/images/pawn{N}.ext
 		file, header, err := r.FormFile("photo")
 		var imgName string
 		if err == nil && file != nil {
@@ -134,17 +121,15 @@ func Joueur(w http.ResponseWriter, r *http.Request) {
 		// Enregistrer cookies spécifiques au joueur (1 ou 2)
 		if joueur == "2" {
 			http.SetCookie(w, &http.Cookie{Name: "nomJoueur2", Value: name, Path: "/"})
-			http.SetCookie(w, &http.Cookie{Name: "pionJoueur2", Value: imgName, Path: "/"})
+			// déterminer le nom d'image du pion choisi
+			img := fmt.Sprintf("pawn%s.svg", pion)
+			http.SetCookie(w, &http.Cookie{Name: "pionJoueur2", Value: img, Path: "/"})
 		} else {
 			http.SetCookie(w, &http.Cookie{Name: "nomJoueur1", Value: name, Path: "/"})
 			http.SetCookie(w, &http.Cookie{Name: "pionJoueur1", Value: imgName, Path: "/"})
 		}
 
-		data := map[string]string{
-			"Title":   "Joueur enregistré",
-			"Message": "Merci " + name + ". Tu as choisi le pion " + pion + ".",
-		}
-		renderTemplate(w, "player.html", data)
+		http.Redirect(w, r, "/", http.StatusSeeOther)
 		return
 	}
 
@@ -153,4 +138,17 @@ func Joueur(w http.ResponseWriter, r *http.Request) {
 		"Message": "Choisis ton pion et entre ton prénom",
 	}
 	renderTemplate(w, "player.html", data)
+}
+
+// Reset réinitialise la partie et supprime les cookies joueurs
+func Reset(w http.ResponseWriter, r *http.Request) {
+	// Réinitialise l'instance du jeu
+	if gameInstance != nil {
+		*gameInstance = *pion.NewGame()
+	}
+	// Supprime les cookies joueurs
+	for _, c := range []string{"nomJoueur1", "nomJoueur2", "pionJoueur1", "pionJoueur2"} {
+		http.SetCookie(w, &http.Cookie{Name: c, Value: "", Path: "/", MaxAge: -1})
+	}
+	http.Redirect(w, r, "/", http.StatusSeeOther)
 }
