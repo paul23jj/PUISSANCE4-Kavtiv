@@ -76,7 +76,7 @@ func Home(w http.ResponseWriter, r *http.Request) {
 		TakenPawns: taken,
 		Score1:     ScoreJoueur1,
 		Score2:     ScoreJoueur2,
-	}
+	}caca
 	// ...le reste du code...
 	renderTemplate(w, "index.html", vd)
 }
