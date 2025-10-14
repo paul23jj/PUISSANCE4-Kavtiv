@@ -64,12 +64,14 @@ func Home(w http.ResponseWriter, r *http.Request) {
 	vd := ViewData{
 		Title:      "Accueil",
 		Message:    "Bienvenue sur la page d'accueil 🎉",
+		Name1: 	"Joueur 1",
+		Name2: 	"Joueur 2",
 		Grid:       make([][]int, 6),
 		PawnImg1:   "/images/pawn1.svg",
 		PawnImg2:   "/images/pawn2.svg",
 		TakenPawns: taken,
-		Score1:     ScoreJoueur1,
-		Score2:     ScoreJoueur2,
+		Score1:     11,
+		Score2:     11,
 	}
 	// ...le reste du code...
 	renderTemplate(w, "index.html", vd)
