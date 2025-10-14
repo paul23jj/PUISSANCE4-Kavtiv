@@ -14,7 +14,7 @@
 </h2>
 <section class="pion-selection">
     <h2>Joueur 1 : choisissez votre jeton</h2>
-    <form method="post" action="/joueur?joueur=1" enctype="multipart/form-data">
+    <form method="post" action="/joueur" enctype="multipart/form-data">
         <input type="text" name="name" placeholder="Nom Joueur 1" required>
         <div class="pions">
             <label><input type="radio" name="pion" value="1" required {{if inSlice "pawn1.svg" .TakenPawns}}disabled{{end}}> <img src="../images/sdm.jpg" alt="SDM" width="64"></label>
