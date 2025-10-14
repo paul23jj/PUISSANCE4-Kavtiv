@@ -12,8 +12,19 @@ import (
 
 // renderTemplate est une fonction utilitaire pour afficher un template HTML avec des données dynamiques
 func renderTemplate(w http.ResponseWriter, filename string, data interface{}) {
-	tmpl := template.Must(template.ParseFiles("template/" + filename)) // Charge le fichier template depuis le dossier "template"
-	tmpl.Execute(w, data)                                              // Exécute le template et écrit le résultat dans la réponse HTTP
+	// Ajoute une fonction utilitaire 'seq' pour générer une séquence d'entiers dans les templates
+	funcMap := template.FuncMap{
+		"seq": func(a, b int) []int {
+			s := make([]int, 0, b-a+1)
+			for i := a; i <= b; i++ {
+				s = append(s, i)
+			}
+			return s
+		},
+	}
+
+	tmpl := template.Must(template.New(filepath.Base(filename)).Funcs(funcMap).ParseFiles("template/" + filename))
+	tmpl.Execute(w, data) // Exécute le template et écrit le résultat dans la réponse HTTP
 }
 
 // instance du jeu (injectée depuis le routeur)
@@ -91,42 +102,42 @@ func Joueur(w http.ResponseWriter, r *http.Request) {
 		name := r.FormValue("name")
 		pion := r.FormValue("pion")
 
-		// Si un fichier a été uploadé sous le champ 'photo', on l'enregistre dans src/images/pawn{N}.ext
+		// Si un fichier a été uploadé sous le champ 'photo', on l'enregistre et on sauvegarde son nom
 		file, header, err := r.FormFile("photo")
+		var imgName string
 		if err == nil && file != nil {
 			defer file.Close()
 
-			// S'assure que le dossier images existe
 			imagesDir := "src/images"
 			os.MkdirAll(imagesDir, 0755)
 
-			// devine l'extension à partir du nom de fichier uploadé
 			ext := filepath.Ext(header.Filename)
 			if ext == "" {
 				ext = ".png"
 			}
 
-			// enregistrer sous pawn{joueur}{ext}
-			outPath := filepath.Join(imagesDir, fmt.Sprintf("pawn%s%s", joueur, ext))
+			imgName = fmt.Sprintf("pawn%s%s", joueur, ext)
+			outPath := filepath.Join(imagesDir, imgName)
 
-			outFile, err := os.Create(outPath)
-			if err == nil {
+			outFile, ferr := os.Create(outPath)
+			if ferr == nil {
 				defer outFile.Close()
 				io.Copy(outFile, file)
+			} else {
+				// si erreur, retomber sur l'image choisie
+				imgName = fmt.Sprintf("pawn%s.svg", pion)
 			}
+		} else {
+			imgName = fmt.Sprintf("pawn%s.svg", pion)
 		}
 
-		// Enregistrer le choix dans des cookies simples (pour usage client)
 		// Enregistrer cookies spécifiques au joueur (1 ou 2)
 		if joueur == "2" {
 			http.SetCookie(w, &http.Cookie{Name: "nomJoueur2", Value: name, Path: "/"})
-			// déterminer le nom d'image du pion choisi
-			img := fmt.Sprintf("pawn%s.svg", pion)
-			http.SetCookie(w, &http.Cookie{Name: "pionJoueur2", Value: img, Path: "/"})
+			http.SetCookie(w, &http.Cookie{Name: "pionJoueur2", Value: imgName, Path: "/"})
 		} else {
 			http.SetCookie(w, &http.Cookie{Name: "nomJoueur1", Value: name, Path: "/"})
-			img := fmt.Sprintf("pawn%s.svg", pion)
-			http.SetCookie(w, &http.Cookie{Name: "pionJoueur1", Value: img, Path: "/"})
+			http.SetCookie(w, &http.Cookie{Name: "pionJoueur1", Value: imgName, Path: "/"})
 		}
 
 		data := map[string]string{
