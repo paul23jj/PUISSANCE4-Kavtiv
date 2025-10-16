@@ -22,6 +22,8 @@ func New() *http.ServeMux {
 	// Serve files statiques (CSS/JS/images)
 	// expose /static/ -> src/static/ and /images/ -> src/images/
 	mux.Handle("/static/", http.StripPrefix("/static/", http.FileServer(http.Dir("src/static"))))
+	// expose /css/ -> src/css/ (le projet a un dossier src/css pour les styles)
+	mux.Handle("/css/", http.StripPrefix("/css/", http.FileServer(http.Dir("src/css"))))
 	mux.Handle("/images/", http.StripPrefix("/images/", http.FileServer(http.Dir("src/images"))))
 
 	// Route pour jouer un coup — accepte JSON (API) ou formulaire HTML (col)
@@ -39,13 +41,22 @@ func New() *http.ServeMux {
 			var col int
 			_, err := fmt.Sscanf(colStr, "%d", &col)
 			if err != nil {
-				http.Error(w, "Colonne invalide", http.StatusBadRequest)
+				// rediriger vers la page d'accueil avec message d'erreur
+				http.Redirect(w, r, "/?err=Colonne+invalide", http.StatusSeeOther)
 				return
 			}
 			err = game.PlayMove(col)
 			if err != nil {
-				http.Error(w, err.Error(), http.StatusBadRequest)
+				// rediriger vers la page d'accueil avec message d'erreur
+				http.Redirect(w, r, "/?err="+err.Error(), http.StatusSeeOther)
 				return
+			}
+			// incrémenter score si victoire
+			if game.LastState == "Victoire joueur 1" {
+				controller.ScoreJoueur1++
+			}
+			if game.LastState == "Victoire joueur 2" {
+				controller.ScoreJoueur2++
 			}
 			// Rediriger vers la page d'accueil pour affichage HTML
 			http.Redirect(w, r, "/", http.StatusSeeOther)
@@ -56,13 +67,11 @@ func New() *http.ServeMux {
 		var data struct {
 			Col int `json:"col"`
 		}
-		err := json.NewDecoder(r.Body).Decode(&data)
-		if err != nil {
+		if err := json.NewDecoder(r.Body).Decode(&data); err != nil {
 			http.Error(w, "JSON invalide", http.StatusBadRequest)
 			return
 		}
-		err = game.PlayMove(data.Col)
-		if err != nil {
+		if err := game.PlayMove(data.Col); err != nil {
 			http.Error(w, err.Error(), http.StatusBadRequest)
 			return
 		}

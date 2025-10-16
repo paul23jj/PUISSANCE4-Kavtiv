@@ -16,8 +16,30 @@ var ScoreJoueur2 int
 // renderTemplate est une fonction utilitaire pour afficher un template HTML avec des données dynamiques
 // renderTemplate est une fonction utilitaire pour afficher un template HTML avec des données dynamiques
 func renderTemplate(w http.ResponseWriter, filename string, data interface{}) {
-	tmpl := template.Must(template.ParseFiles("template/" + filename)) // Charge le fichier template depuis le dossier "template"
-	tmpl.Execute(w, data)                                              // Exécute le template et écrit le résultat dans la réponse HTTP
+	// fonctions utilitaires pour les templates
+	funcMap := template.FuncMap{
+		"inSlice": func(item string, list []string) bool {
+			if list == nil {
+				return false
+			}
+			for _, v := range list {
+				if v == item {
+					return true
+				}
+			}
+			return false
+		},
+		"seq": func(a, b int) []int {
+			s := make([]int, 0, b-a+1)
+			for i := a; i <= b; i++ {
+				s = append(s, i)
+			}
+			return s
+		},
+	}
+
+	tmpl := template.Must(template.New(filepath.Base(filename)).Funcs(funcMap).ParseFiles("template/" + filename))
+	tmpl.Execute(w, data)
 }
 
 // instance du jeu (injectée depuis le routeur)
@@ -49,6 +71,7 @@ func Home(w http.ResponseWriter, r *http.Request) {
 	type ViewData struct {
 		Title      string
 		Message    string
+		Error      string
 		Grid       [][]int
 		Player     int
 		State      string
@@ -64,16 +87,46 @@ func Home(w http.ResponseWriter, r *http.Request) {
 	vd := ViewData{
 		Title:      "Accueil",
 		Message:    "Bienvenue sur la page d'accueil 🎉",
-		Name1: 	"Joueur 1",
-		Name2: 	"Joueur 2",
 		Grid:       make([][]int, 6),
 		PawnImg1:   "/images/pawn1.svg",
 		PawnImg2:   "/images/pawn2.svg",
 		TakenPawns: taken,
-		Score1:     11,
-		Score2:     11,
+		Score1:     ScoreJoueur1,
+		Score2:     ScoreJoueur2,
 	}
-	// ...le reste du code...
+
+	// récupérer noms et pions depuis les cookies
+	if c, err := r.Cookie("nomJoueur1"); err == nil {
+		vd.Name1 = c.Value
+	}
+	if c, err := r.Cookie("nomJoueur2"); err == nil {
+		vd.Name2 = c.Value
+	}
+	if c, err := r.Cookie("pionJoueur1"); err == nil && c.Value != "" {
+		vd.PawnImg1 = "/images/" + c.Value
+	}
+	if c, err := r.Cookie("pionJoueur2"); err == nil && c.Value != "" {
+		vd.PawnImg2 = "/images/" + c.Value
+	}
+
+	// récupérer message d'erreur depuis query param (redir depuis /play en HTML)
+	if errMsg := r.URL.Query().Get("err"); errMsg != "" {
+		vd.Error = errMsg
+	}
+
+	// remplir la grille depuis l'instance de jeu
+	if gameInstance != nil {
+		for rr := 0; rr < 6; rr++ {
+			row := make([]int, 7)
+			for cc := 0; cc < 7; cc++ {
+				row[cc] = int(gameInstance.Board.Grid[rr][cc])
+			}
+			vd.Grid[rr] = row
+		}
+		vd.Player = gameInstance.Player
+		vd.State = gameInstance.LastState
+	}
+
 	renderTemplate(w, "index.html", vd)
 }
 
