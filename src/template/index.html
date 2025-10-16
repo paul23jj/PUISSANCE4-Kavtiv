@@ -47,5 +47,44 @@
         <button type="submit">Valider Joueur 2</button>
     </form>
 </section>
+</section>
+<hr>
+<!-- Zone d'affichage du plateau -->
+<section>
+    <h2>Plateau</h2>
+    <form method="post" action="/play">
+        <div class="board">
+            <!-- boutons colonnes -->
+            <div class="controls">
+                <button type="submit" name="col" value="0">0</button>
+                <button type="submit" name="col" value="1">1</button>
+                <button type="submit" name="col" value="2">2</button>
+                <button type="submit" name="col" value="3">3</button>
+                <button type="submit" name="col" value="4">4</button>
+                <button type="submit" name="col" value="5">5</button>
+                <button type="submit" name="col" value="6">6</button>
+            </div>
+        </div>
+    </form>
+
+    <div class="grid">
+        {{ if .Grid }}
+        {{ range $rIdx, $row := .Grid }}
+            <div class="row">
+            {{ range $cIdx, $cell := $row }}
+                <div class="cell">
+                    {{ if eq $cell 1 }}
+                        <img src="{{ $.PawnImg1 }}" alt="p1" class="pawn pawn-1">
+                    {{ else if eq $cell 2 }}
+                        <img src="{{ $.PawnImg2 }}" alt="p2" class="pawn pawn-2 flip">
+                    {{ end }}
+                </div>
+            {{ end }}
+            </div>
+        {{ end }}
+        {{ end }}
+    </div>
+</section>
+
 </body>
 </html>
