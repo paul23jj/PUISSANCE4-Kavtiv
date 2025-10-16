@@ -20,15 +20,20 @@ func New() *http.ServeMux {
 	// --- Sert les fichiers statiques ---
 	staticPath := filepath.Join(wd, "static")
 	imagesPath := filepath.Join(wd, "images")
+	soundsPath := filepath.Join(wd, "sounds") // ✅ <-- dossier sons ajouté ici
 
 	fmt.Println("🔍 Test chemins :")
 	fmt.Println("   Static =", staticPath)
 	fmt.Println("   Images =", imagesPath)
+	fmt.Println("   Sounds =", soundsPath) // ✅ log pour vérifier
 
 	mux.Handle("/static/", http.StripPrefix("/static/", http.FileServer(http.Dir(staticPath))))
 	mux.Handle("/images/", http.StripPrefix("/images/", http.FileServer(http.Dir(imagesPath))))
+	mux.Handle("/sounds/", http.StripPrefix("/sounds/", http.FileServer(http.Dir(soundsPath)))) // ✅ <-- nouvelle ligne
+
 	fmt.Println("✅ Static mount: /static/ ->", staticPath)
 	fmt.Println("✅ Static mount: /images/ ->", imagesPath)
+	fmt.Println("✅ Static mount: /sounds/ ->", soundsPath) // ✅ confirmation sons
 
 	// --- Routes principales ---
 	mux.HandleFunc("/", controller.Home)
