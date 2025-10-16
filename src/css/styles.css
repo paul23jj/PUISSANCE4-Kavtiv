@@ -21,26 +21,48 @@ body {
     text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.7);
 }
 
-.pions{
+.pions-1{
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
     gap: 10px;
 }
-.pions label {
+.pions-1 label {
     display: flex;
     flex-direction: column;
     align-items: center;
     cursor: pointer;
 }
-.pions img {
+.pions-1 img {
     width: 64px;
     height: 64px;
     border-radius: 50%;
     object-fit: cover;
     transition: transform 0.2s;
 }
-.pions img:hover {
+.pions-1 img:hover {
+    transform: scale(1.1);
+}
+.pions-2{
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
+}
+.pions-2 label {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    cursor: pointer;
+}
+.pions-2 img {
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    object-fit: cover;
+    transition: transform 0.2s;
+}
+.pions-2 img:hover {
     transform: scale(1.1);
 }
 .victoire {
