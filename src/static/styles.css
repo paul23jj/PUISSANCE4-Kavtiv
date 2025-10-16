@@ -20,7 +20,6 @@ body {
     font-size: 3rem;
     text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.7);
 }
-
 .pions-1{
     display: flex;
     flex-wrap: wrap;
@@ -71,3 +70,9 @@ body {
     text-align: center;
     margin: 20px 0;
 }
+
+/* Layout players side-by-side */
+.players-row { display:flex; gap:20px; justify-content:space-between; align-items:flex-start; padding: 16px; }
+.pion-selection { flex: 1 1 45%; background-color: rgba(255,255,255,0.85); padding:12px; border-radius:8px }
+.pions-1 { justify-content:flex-start }
+.pions-2 { justify-content:flex-end }
