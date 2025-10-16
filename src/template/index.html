@@ -8,9 +8,10 @@
 </head>
 <body> 
     <h1 class="title">Puissance 4</h1>
+    <section class="pion-selection">
     <h2>Joueur 1 : choisissez votre jeton</h2>
     <form method="post" action="/joueur" enctype="multipart/form-data">
-        <input type="text" name="name" placeholder="Nom Joueur 1" required>
+        <input type="hidden" name="joueur" value="1">
         <div class="pions-1">
             <label><input type="radio" name="pion" value="1" required {{if inSlice "pawn1.svg" .TakenPawns}}disabled{{end}}> <img src="../images/sdm.jpg" alt="SDM" width="64"></label>
             <label><input type="radio" name="pion" value="2" {{if inSlice "pawn2.svg" .TakenPawns}}disabled{{end}}> <img src="../images/kaaris.webp" alt="Karis" width="64"></label>
@@ -23,14 +24,13 @@
             <label><input type="radio" name="pion" value="9" {{if inSlice "pawn9.svg" .TakenPawns}}disabled{{end}}> <img src="../images/niska.jpg" alt="Niska" width="64"></label>
             <label><input type="radio" name="pion" value="10" {{if inSlice "pawn10.svg" .TakenPawns}}disabled{{end}}> <img src="../images/jul.jpg" alt="Jul" width="64"></label>
         </div>
-        <input type="file" name="photo" accept="image/*">
         <button type="submit">Valider Joueur 1</button>
     </form>
 </section>
 <section class="pion-selection">
     <h2>Joueur 2 : choisissez votre jeton</h2>
-    <form method="post" action="/joueur?joueur=2" enctype="multipart/form-data">
-        <input type="text" name="name" placeholder="Nom Joueur 2" required>
+    <form method="post" action="/joueur" enctype="multipart/form-data">
+        <input type="hidden" name="joueur" value="2">
         <div class="pions-2">
             <label><input type="radio" name="pion" value="1" required {{if inSlice "pawn1.svg" .TakenPawns}}disabled{{end}}> <img src="../images/sdm.jpg" alt="SDM" width="64"></label>
             <label><input type="radio" name="pion" value="2" {{if inSlice "pawn2.svg" .TakenPawns}}disabled{{end}}> <img src="../images/kaaris.webp" alt="Karis" width="64"></label>
@@ -43,7 +43,6 @@
             <label><input type="radio" name="pion" value="9" {{if inSlice "pawn9.svg" .TakenPawns}}disabled{{end}}> <img src="../images/niska.jpg" alt="Niska" width="64"></label>
             <label><input type="radio" name="pion" value="10" {{if inSlice "pawn10.svg" .TakenPawns}}disabled{{end}}> <img src="../images/jul.jpg" alt="Jul" width="64"></label>
         </div>
-        <input type="file" name="photo" accept="image/*">
         <button type="submit">Valider Joueur 2</button>
     </form>
 </section>
