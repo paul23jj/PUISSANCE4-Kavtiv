@@ -4,13 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Puissance 4</title>
-    <!-- ✅ Bon chemin pour ton CSS -->
+    <!-- ✅ le bon chemin pour ton CSS -->
     <link rel="stylesheet" href="/static/styles.css">
 </head>
 <body> 
     <h1 class="title">Puissance 4</h1>
-<<<<<<< HEAD
-=======
     <div class="players-row">
     <section class="pion-selection">
     <h2>Joueur 1 : choisissez votre jeton</h2>
@@ -66,117 +64,24 @@
             </div>
         </div>
     </form>
->>>>>>> a94e1bb2155960443bc1ecfa70702402b567c5e4
 
-    <div class="players-row">
-        <!-- 🧩 Joueur 1 -->
-        <section class="pion-selection">
-            <h2>Joueur 1 : choisissez votre jeton</h2>
-            <form method="post" action="/joueur" enctype="multipart/form-data">
-                <input type="hidden" name="joueur" value="1">
-                <div class="pions-1">
-                    <label><input type="radio" name="pion" value="1" required> <img src="/images/sdm.jpg" alt="SDM" width="64"></label>
-                    <label><input type="radio" name="pion" value="2"> <img src="/images/kaaris.webp" alt="Kaaris" width="64"></label>
-                    <label><input type="radio" name="pion" value="3"> <img src="/images/booba.png" alt="Booba" width="64"></label>
-                    <label><input type="radio" name="pion" value="4"> <img src="/images/naps.jpg" alt="Naps" width="64"></label>
-                    <label><input type="radio" name="pion" value="5"> <img src="/images/damso.jpg" alt="Damso" width="64"></label>
-                    <label><input type="radio" name="pion" value="6"> <img src="/images/tiako.jpg" alt="Tiako" width="64"></label>
-                    <label><input type="radio" name="pion" value="7"> <img src="/images/leto.jpg" alt="Leto" width="64"></label>
-                    <label><input type="radio" name="pion" value="8"> <img src="/images/plk.jpg" alt="PLK" width="64"></label>
-                    <label><input type="radio" name="pion" value="9"> <img src="/images/niska.jpg" alt="Niska" width="64"></label>
-                    <label><input type="radio" name="pion" value="10"> <img src="/images/jul.jpg" alt="Jul" width="64"></label>
+    <div class="grid">
+        {{ if .Grid }}
+        {{ range $rIdx, $row := .Grid }}
+            <div class="row">
+            {{ range $cIdx, $cell := $row }}
+                <div class="cell">
+                    {{ if eq $cell 1 }}
+                        <img src="{{ $.PawnImg1 }}" alt="p1" class="pawn pawn-1">
+                    {{ else if eq $cell 2 }}
+                        <img src="{{ $.PawnImg2 }}" alt="p2" class="pawn pawn-2 flip">
+                    {{ end }}
                 </div>
-                <button type="submit">Valider Joueur 1</button>
-            </form>
-        </section>
-
-        <!-- 🧩 Joueur 2 -->
-        <section class="pion-selection">
-            <h2>Joueur 2 : choisissez votre jeton</h2>
-            <form method="post" action="/joueur" enctype="multipart/form-data">
-                <input type="hidden" name="joueur" value="2">
-                <div class="pions-2">
-                    <label><input type="radio" name="pion" value="1" required> <img src="/images/sdm.jpg" alt="SDM" width="64"></label>
-                    <label><input type="radio" name="pion" value="2"> <img src="/images/kaaris.webp" alt="Kaaris" width="64"></label>
-                    <label><input type="radio" name="pion" value="3"> <img src="/images/booba.png" alt="Booba" width="64"></label>
-                    <label><input type="radio" name="pion" value="4"> <img src="/images/naps.jpg" alt="Naps" width="64"></label>
-                    <label><input type="radio" name="pion" value="5"> <img src="/images/damso.jpg" alt="Damso" width="64"></label>
-                    <label><input type="radio" name="pion" value="6"> <img src="/images/tiako.jpg" alt="Tiako" width="64"></label>
-                    <label><input type="radio" name="pion" value="7"> <img src="/images/leto.jpg" alt="Leto" width="64"></label>
-                    <label><input type="radio" name="pion" value="8"> <img src="/images/plk.jpg" alt="PLK" width="64"></label>
-                    <label><input type="radio" name="pion" value="9"> <img src="/images/niska.jpg" alt="Niska" width="64"></label>
-                    <label><input type="radio" name="pion" value="10"> <img src="/images/jul.jpg" alt="Jul" width="64"></label>
-                </div>
-                <button type="submit">Valider Joueur 2</button>
-            </form>
-        </section>
-    </div>
-
-    <section>
-        <h2>Plateau</h2>
-        <form method="post" action="/play">
-            <div class="board">
-                <div class="controls">
-                    <button type="submit" name="col" value="0">0</button>
-                    <button type="submit" name="col" value="1">1</button>
-                    <button type="submit" name="col" value="2">2</button>
-                    <button type="submit" name="col" value="3">3</button>
-                    <button type="submit" name="col" value="4">4</button>
-                    <button type="submit" name="col" value="5">5</button>
-                    <button type="submit" name="col" value="6">6</button>
-                </div>
+            {{ end }}
             </div>
-        </form>
-
-        <div class="grid">
-            {{ if .Grid }}
-            {{ range $rIdx, $row := .Grid }}
-                <div class="row">
-                {{ range $cIdx, $cell := $row }}
-                    <div class="cell">
-                        {{ if eq $cell 1 }}
-                            <img src="{{ $.PawnImg1 }}" alt="p1" class="pawn pawn-1">
-                        {{ else if eq $cell 2 }}
-                            <img src="{{ $.PawnImg2 }}" alt="p2" class="pawn pawn-2 flip">
-                        {{ end }}
-                    </div>
-                {{ end }}
-                </div>
-            {{ end }}
-            {{ end }}
-        </div>
-    </section>
-
-    <!-- 🎵 Script pour les sons des rappeurs -->
-    <script>
-    document.addEventListener('DOMContentLoaded', () => {
-        const sounds = {
-            "1": new Audio("/sounds/sdm.mp3"),
-            "2": new Audio("/sounds/kaaris.mp3"),
-            "3": new Audio("/sounds/booba.mp3"),
-            "4": new Audio("/sounds/naps.mp3"),
-            "5": new Audio("/sounds/damso.mp3"),
-            "6": new Audio("/sounds/tako.mp3"),
-            "7": new Audio("/sounds/leto.mp3"),
-            "8": new Audio("/sounds/plk.mp3"),
-            "9": new Audio("/sounds/niska.mp3"),
-            "1220": new Audio("/sounds/jul.mp3")
-        };
-
-        // Quand un joueur valide son pion → joue le son correspondant
-        document.querySelectorAll('form').forEach(form => {
-            form.addEventListener('submit', e => {
-                const selected = form.querySelector('input[name="piion"]:checked');
-                if (selected) {
-                    const id = selected.value;
-                    if (sounds[id]) {
-                        sounds[id].currentTime = 0;
-                        sounds[id].play();
-                    }
-                }
-            });
-        });
-    });
-    </script>
+        {{ end }}
+        {{ end }}
+    </div>
+</section>
 </body>
 </html>
