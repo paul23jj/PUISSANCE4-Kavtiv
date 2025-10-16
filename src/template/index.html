@@ -156,17 +156,17 @@
             "3": new Audio("/sounds/booba.mp3"),
             "4": new Audio("/sounds/naps.mp3"),
             "5": new Audio("/sounds/damso.mp3"),
-            "6": new Audio("/sounds/tako.mp3"),
+            "6": new Audio("/sounds/tiako.mp3"),
             "7": new Audio("/sounds/leto.mp3"),
             "8": new Audio("/sounds/plk.mp3"),
             "9": new Audio("/sounds/niska.mp3"),
-            "1220": new Audio("/sounds/jul.mp3")
+            "10": new Audio("/sounds/jul.mp3"),
         };
 
         // Quand un joueur valide son pion → joue le son correspondant
         document.querySelectorAll('form').forEach(form => {
             form.addEventListener('submit', e => {
-                const selected = form.querySelector('input[name="piion"]:checked');
+                const selected = form.querySelector('input[name="pion"]:checked');
                 if (selected) {
                     const id = selected.value;
                     if (sounds[id]) {
