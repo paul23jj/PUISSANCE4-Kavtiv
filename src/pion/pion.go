@@ -16,7 +16,7 @@ type Game struct {
 	Board     Board `json:"board"`  // état du plateau
 	Player    int   `json:"player"` // joueur courant (1 ou 2)
 	LastState string `json:"state"` // "En cours", "Victoire joueur X", "Match nul"
-}
+} 
 
 // 🌟 Constructeur d’une nouvelle partie
 func NewGame() *Game {
