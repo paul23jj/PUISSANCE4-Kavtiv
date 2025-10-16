@@ -64,52 +64,6 @@
             </div>
         </div>
     </form>
->>>>>>> a94e1bb2155960443bc1ecfa70702402b567c5e4
-
-    <div class="players-row">
-        <!-- 🧩 Joueur 1 -->
-        <section class="pion-selection">
-            <h2>Joueur 1 : choisissez votre jeton</h2>
-            <form method="post" action="/joueur" enctype="multipart/form-data">
-                <input type="hidden" name="joueur" value="1">
-                <div class="pions-1">
-                    <label><input type="radio" name="pion" value="1" required> <img src="/images/sdm.jpg" alt="SDM" width="64"></label>
-                    <label><input type="radio" name="pion" value="2"> <img src="/images/kaaris.webp" alt="Kaaris" width="64"></label>
-                    <label><input type="radio" name="pion" value="3"> <img src="/images/booba.png" alt="Booba" width="64"></label>
-                    <label><input type="radio" name="pion" value="4"> <img src="/images/naps.jpg" alt="Naps" width="64"></label>
-                    <label><input type="radio" name="pion" value="5"> <img src="/images/damso.jpg" alt="Damso" width="64"></label>
-                    <label><input type="radio" name="pion" value="6"> <img src="/images/tiako.jpg" alt="Tiako" width="64"></label>
-                    <label><input type="radio" name="pion" value="7"> <img src="/images/leto.jpg" alt="Leto" width="64"></label>
-                    <label><input type="radio" name="pion" value="8"> <img src="/images/plk.jpg" alt="PLK" width="64"></label>
-                    <label><input type="radio" name="pion" value="9"> <img src="/images/niska.jpg" alt="Niska" width="64"></label>
-                    <label><input type="radio" name="pion" value="10"> <img src="/images/jul.jpg" alt="Jul" width="64"></label>
-                </div>
-                <button type="submit">Valider Joueur 1</button>
-            </form>
-        </section>
-
-        <!-- 🧩 Joueur 2 -->
-        <section class="pion-selection">
-            <h2>Joueur 2 : choisissez votre jeton</h2>
-            <form method="post" action="/joueur" enctype="multipart/form-data">
-                <input type="hidden" name="joueur" value="2">
-                <div class="pions-2">
-                    <label><input type="radio" name="pion" value="1" required> <img src="/images/sdm.jpg" alt="SDM" width="64"></label>
-                    <label><input type="radio" name="pion" value="2"> <img src="/images/kaaris.webp" alt="Kaaris" width="64"></label>
-                    <label><input type="radio" name="pion" value="3"> <img src="/images/booba.png" alt="Booba" width="64"></label>
-                    <label><input type="radio" name="pion" value="4"> <img src="/images/naps.jpg" alt="Naps" width="64"></label>
-                    <label><input type="radio" name="pion" value="5"> <img src="/images/damso.jpg" alt="Damso" width="64"></label>
-                    <label><input type="radio" name="pion" value="6"> <img src="/images/tiako.jpg" alt="Tiako" width="64"></label>
-                    <label><input type="radio" name="pion" value="7"> <img src="/images/leto.jpg" alt="Leto" width="64"></label>
-                    <label><input type="radio" name="pion" value="8"> <img src="/images/plk.jpg" alt="PLK" width="64"></label>
-                    <label><input type="radio" name="pion" value="9"> <img src="/images/niska.jpg" alt="Niska" width="64"></label>
-                    <label><input type="radio" name="pion" value="10"> <img src="/images/jul.jpg" alt="Jul" width="64"></label>
-                </div>
-                <button type="submit">Valider Joueur 2</button>
-            </form>
-        </section>
-    </div>
-
     <section>
         <h2>Plateau</h2>
         <form method="post" action="/play">
@@ -125,24 +79,6 @@
                 </div>
             </div>
         </form>
-
-        <div class="grid">
-            {{ if .Grid }}
-            {{ range $rIdx, $row := .Grid }}
-                <div class="row">
-                {{ range $cIdx, $cell := $row }}
-                    <div class="cell">
-                        {{ if eq $cell 1 }}
-                            <img src="{{ $.PawnImg1 }}" alt="p1" class="pawn pawn-1">
-                        {{ else if eq $cell 2 }}
-                            <img src="{{ $.PawnImg2 }}" alt="p2" class="pawn pawn-2 flip">
-                        {{ end }}
-                    </div>
-                {{ end }}
-                </div>
-            {{ end }}
-            {{ end }}
-        </div>
     </section>
 
     <!-- 🎵 Script pour les sons des rappeurs -->
@@ -176,23 +112,6 @@
         });
     });
     </script>
-    <div class="grid">
-        {{ if .Grid }}
-        {{ range $rIdx, $row := .Grid }}
-            <div class="row">
-            {{ range $cIdx, $cell := $row }}
-                <div class="cell">
-                    {{ if eq $cell 1 }}
-                        <img src="{{ $.PawnImg1 }}" alt="p1" class="pawn pawn-1">
-                    {{ else if eq $cell 2 }}
-                        <img src="{{ $.PawnImg2 }}" alt="p2" class="pawn pawn-2 flip">
-                    {{ end }}
-                </div>
-            {{ end }}
-            </div>
-        {{ end }}
-        {{ end }}
-    </div>
 </section>
 </body>
 </html>
