@@ -71,7 +71,6 @@ body {
     margin: 20px 0;
 }
 
-/* Layout players side-by-side */
 .players-row { display:flex; gap:20px; justify-content:space-between; align-items:flex-start; padding: 16px; }
 .pion-selection { flex: 1 1 45%; background-color: rgba(255,255,255,0.85); padding:12px; border-radius:8px }
 .pions-1 { justify-content:flex-start }
