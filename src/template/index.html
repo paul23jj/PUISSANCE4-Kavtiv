@@ -8,6 +8,7 @@
 </head>
 <body> 
     <h1 class="title">Puissance 4</h1>
+    <div class="players-row">
     <section class="pion-selection">
     <h2>Joueur 1 : choisissez votre jeton</h2>
     <form method="post" action="/joueur" enctype="multipart/form-data">
@@ -26,8 +27,8 @@
         </div>
         <button type="submit">Valider Joueur 1</button>
     </form>
-</section>
-<section class="pion-selection">
+    </section>
+    <section class="pion-selection">
     <h2>Joueur 2 : choisissez votre jeton</h2>
     <form method="post" action="/joueur" enctype="multipart/form-data">
         <input type="hidden" name="joueur" value="2">
@@ -45,8 +46,8 @@
         </div>
         <button type="submit">Valider Joueur 2</button>
     </form>
-</section>
-</section>
+    </section>
+    </div>
 <hr>
 <!-- Zone d'affichage du plateau -->
 <section>
