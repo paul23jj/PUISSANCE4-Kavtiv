@@ -12,6 +12,17 @@ import (
 
 var ScoreJoueur1 int
 var ScoreJoueur2 int
+var funcMap = template.FuncMap{
+	"inSlice": func(value string, list []string) bool {
+		for _, item := range list {
+			if item == value {
+				return true
+			}
+		}
+		return false
+	},
+}
+
 
 // renderTemplate est une fonction utilitaire pour afficher un template HTML avec des données dynamiques
 // renderTemplate est une fonction utilitaire pour afficher un template HTML avec des données dynamiques
