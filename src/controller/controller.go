@@ -15,7 +15,7 @@ var ScoreJoueur1 int
 var ScoreJoueur2 int
 var gameInstance *pion.Game
 
-// --- ⚙️ Fonctions utilitaires disponibles dans les templates ---
+// --- ⚙️ Fonctions utilitaires pour les templates ---
 var funcMap = template.FuncMap{
 	"inSlice": func(value string, list []string) bool {
 		for _, item := range list {
@@ -27,10 +27,32 @@ var funcMap = template.FuncMap{
 	},
 }
 
-// --- 🧱 Fonction pour charger et exécuter un template (chemin dynamique et sûr) ---
+// --- 🧱 Rendu d’un template avec recherche automatique ---
 func renderTemplate(w http.ResponseWriter, filename string, data interface{}) {
-	baseDir, _ := os.Getwd() // récupère le dossier courant (celui d’où tu lances "go run main.go")
-	tmplPath := filepath.Join(baseDir, "src", "template", filename)
+	baseDir, _ := os.Getwd()
+
+	// 🔍 Chemins possibles
+	paths := []string{
+		filepath.Join(baseDir, "src", "template", filename),
+		filepath.Join(baseDir, "template", filename),
+	}
+
+	var tmplPath string
+	for _, p := range paths {
+		if _, err := os.Stat(p); err == nil {
+			tmplPath = p
+			break
+		}
+	}
+
+	// ⚠️ Si introuvable
+	if tmplPath == "" {
+		http.Error(w, "Template introuvable : "+filename, http.StatusInternalServerError)
+		fmt.Println("❌ Template non trouvé dans :", paths)
+		return
+	}
+
+	fmt.Println("📂 Template utilisé :", tmplPath)
 
 	tmpl := template.Must(
 		template.New(filepath.Base(filename)).
@@ -44,7 +66,7 @@ func renderTemplate(w http.ResponseWriter, filename string, data interface{}) {
 	}
 }
 
-// --- 🧩 Injection de l’instance du jeu ---
+// --- 🧩 Injection du jeu ---
 func SetGame(g *pion.Game) {
 	gameInstance = g
 }
@@ -57,7 +79,7 @@ func Home(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// Récupère les pions déjà pris depuis les cookies
+	// Récupère les pions déjà pris
 	taken := []string{}
 	if c, err := r.Cookie("pionJoueur1"); err == nil && c.Value != "" {
 		taken = append(taken, c.Value)
@@ -66,7 +88,6 @@ func Home(w http.ResponseWriter, r *http.Request) {
 		taken = append(taken, c.Value)
 	}
 
-	// Données envoyées au template
 	type ViewData struct {
 		Title      string
 		Message    string
@@ -101,7 +122,7 @@ func Home(w http.ResponseWriter, r *http.Request) {
 // --- 👥 Sélection du joueur ---
 func Joueur(w http.ResponseWriter, r *http.Request) {
 	if r.Method == http.MethodPost {
-		err := r.ParseMultipartForm(10 << 20) // 10 MB max
+		err := r.ParseMultipartForm(10 << 20)
 		if err != nil {
 			http.Error(w, "Erreur formulaire: "+err.Error(), http.StatusBadRequest)
 			return
@@ -109,16 +130,13 @@ func Joueur(w http.ResponseWriter, r *http.Request) {
 
 		joueur := r.FormValue("joueur")
 		if joueur == "" {
-			joueur = r.URL.Query().Get("joueur")
-			if joueur == "" {
-				joueur = "1"
-			}
+			joueur = "1"
 		}
 
 		name := r.FormValue("name")
 		pionChoisi := r.FormValue("pion")
 
-		// --- Gestion upload d'image ---
+		// --- Upload d’image ---
 		file, header, err := r.FormFile("photo")
 		var imgName string
 		if err == nil && file != nil {
@@ -172,7 +190,6 @@ func Reset(w http.ResponseWriter, r *http.Request) {
 		*gameInstance = *pion.NewGame()
 	}
 
-	// Supprime les cookies
 	for _, c := range []string{"nomJoueur1", "nomJoueur2", "pionJoueur1", "pionJoueur2"} {
 		http.SetCookie(w, &http.Cookie{Name: c, Value: "", Path: "/", MaxAge: -1})
 	}
