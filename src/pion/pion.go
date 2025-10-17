@@ -1,41 +1,37 @@
 package pion
 
-import "fmt"
+import (
+	"fmt"
+	"time"
+)
 
 const (
-	Rows = 6 // 6 lignes
-	Cols = 7 // 7 colonnes
+	Rows = 6
+	Cols = 7
 )
 
 type Board struct {
-	Grid [Rows][Cols]int // 0 vide, 1 joueur1, 2 joueur2
+	Grid [Rows][Cols]int
 }
 
-// 🌟 Structure qui gère une partie
 type Game struct {
-	Board     Board `json:"board"`  // état du plateau
-	Player    int   `json:"player"` // joueur courant (1 ou 2)
-	LastState string `json:"state"` // "En cours", "Victoire joueur X", "Match nul"
-} 
-
-// 🌟 Constructeur d’une nouvelle partie
-func NewGame() *Game {
-	return &Game{
-		Player: 1, // joueur 1 commence
-	}
+	Board     Board  `json:"board"`
+	Player    int    `json:"player"`
+	LastState string `json:"state"`
 }
 
-// 🌟 Joue un coup dans une colonne donnée
+func NewGame() *Game {
+	return &Game{Player: 1}
+}
+
 func (g *Game) PlayMove(col int) error {
-	ok, r, c := g.Board.Drop(col, g.Player)
+	ok, r, c := g.Board.AnimateDrop(col, g.Player) // 👈 ici on utilise la version animée
 	if !ok {
 		return fmt.Errorf("colonne %d pleine ou invalide", col)
 	}
 
-	// Met à jour l’état du jeu
 	g.LastState = g.Board.GameState(r, c, g.Player)
 
-	// Change de joueur si la partie continue
 	if g.LastState == "En cours" {
 		if g.Player == 1 {
 			g.Player = 2
@@ -47,23 +43,50 @@ func (g *Game) PlayMove(col int) error {
 	return nil
 }
 
-// 🌟 Retourne l’état complet du jeu (pour l’API JSON)
 func (g *Game) GetState() interface{} {
 	return g
 }
 
-// --- Ton code original ---
-func (b *Board) Drop(col, player int) (bool, int, int) {
+// 🌟 Version animée de Drop : on montre le pion tomber
+func (b *Board) AnimateDrop(col, player int) (bool, int, int) {
 	if col < 0 || col >= Cols {
 		return false, -1, -1
 	}
-	for r := Rows - 1; r >= 0; r-- {
-		if b.Grid[r][col] == 0 {
-			b.Grid[r][col] = player
+
+	for r := 0; r < Rows; r++ {
+		// efface la position précédente
+		if r > 0 {
+			b.Grid[r-1][col] = 0
+		}
+		b.Grid[r][col] = player
+		printBoard(b)
+		time.Sleep(150 * time.Millisecond)
+
+		// si on touche un pion en dessous ou le bas du plateau
+		if r == Rows-1 || b.Grid[r+1][col] != 0 {
 			return true, r, col
 		}
 	}
-	return false, -1, -1 // colonne pleine
+	return false, -1, -1
+}
+
+// 🌟 Fonction d’affichage du plateau dans le terminal
+func printBoard(b *Board) {
+	fmt.Print("\033[H\033[2J") // Efface la console (effet animation)
+	for r := 0; r < Rows; r++ {
+		for c := 0; c < Cols; c++ {
+			switch b.Grid[r][c] {
+			case 0:
+				fmt.Print(". ")
+			case 1:
+				fmt.Print("🔴 ")
+			case 2:
+				fmt.Print("🟡 ")
+			}
+		}
+		fmt.Println()
+	}
+	fmt.Println()
 }
 
 func (b *Board) IsWin(r, c int) bool {
@@ -114,16 +137,33 @@ func (b *Board) GameState(lastRow, lastCol, player int) string {
 	return "En cours"
 }
 
-func ExampleUsage() {
-	var board Board
-
-	ok, r, c := board.Drop(3, 1)
-	if ok {
-		fmt.Println(board.GameState(r, c, 1))
+func (b *Board) GridSlice() [][]int {
+	g := make([][]int, Rows)
+	for r := 0; r < Rows; r++ {
+		g[r] = make([]int, Cols)
+		for c := 0; c < Cols; c++ {
+			g[r][c] = b.Grid[r][c]
+		}
 	}
+	return g
+}
 
-	ok, r, c = board.Drop(3, 2)
-	if ok {
-		fmt.Println(board.GameState(r, c, 2))
+func ExampleUsage() {
+	game := NewGame()
+
+	for {
+		var col int
+		fmt.Printf("Joueur %d, choisis une colonne (0-6): ", game.Player)
+		fmt.Scan(&col)
+		err := game.PlayMove(col)
+		if err != nil {
+			fmt.Println(err)
+			continue
+		}
+		printBoard(&game.Board)
+		fmt.Println(game.LastState)
+		if game.LastState != "En cours" {
+			break
+		}
 	}
 }

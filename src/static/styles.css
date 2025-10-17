@@ -87,6 +87,7 @@ body {
 .pion-selection { flex: 1 1 45%; background-color: rgba(255,255,255,0.85); padding:12px; border-radius:8px }
 .pions-1 { justify-content:flex-start }
 .pions-2 { justify-content:flex-end }
+<<<<<<< HEAD
 .board-section{
     display: flex;
     flex-direction: column;
@@ -106,3 +107,20 @@ body {
     justify-content: center; 
     align-items: center;
 }
+=======
+
+.token {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    position: absolute;
+    top: -100px;
+    animation: drop 0.4s ease-out forwards;
+  }
+  
+    @keyframes drop {
+        to {
+        top: 0;
+        }
+    }
+>>>>>>> 2ee259cd3a498ff64c70b3418451ef24bd2f649d
