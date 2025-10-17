@@ -175,13 +175,9 @@ func Home(w http.ResponseWriter, r *http.Request) {
 		Message:    "Bienvenue sur la page d'accueil 🎉",
 		Name1:      "Joueur 1",
 		Name2:      "Joueur 2",
-<<<<<<< HEAD
-		Grid:       grid, // ✅ on utilise la grille créée
-=======
 		Grid:       snap.Grid,
 		Player:     snap.Player,
 		State:      snap.State,
->>>>>>> cb3a343b4a321736130ab5a56bf2c3c11e81334c
 		PawnImg1:   "/images/pawn1.svg",
 		PawnImg2:   "/images/pawn2.svg",
 		TakenPawns: taken,
