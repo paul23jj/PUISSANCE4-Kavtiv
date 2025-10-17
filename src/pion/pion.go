@@ -15,9 +15,9 @@ type Board struct {
 }
 
 type Game struct {
-	Board     Board  `json:"board"`
-	Player    int    `json:"player"`
-	LastState string `json:"state"`
+	Board     Board
+	Player    int
+	LastState string
 }
 
 func NewGame() *Game {

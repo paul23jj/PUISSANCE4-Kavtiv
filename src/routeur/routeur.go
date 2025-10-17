@@ -1,7 +1,6 @@
 package routeur
 
 import (
-	"encoding/json"
 	"fmt"
 	"net/http"
 	"os"
@@ -111,43 +110,5 @@ func New() *http.ServeMux {
 			http.Error(w, "Méthode non autorisée", http.StatusMethodNotAllowed)
 		}
 	})
-
-	// --- API /play ---
-	mux.HandleFunc("/play", func(w http.ResponseWriter, r *http.Request) {
-		if r.Method != http.MethodPost {
-			http.Error(w, "Méthode non autorisée", http.StatusMethodNotAllowed)
-			return
-		}
-		var data struct {
-			Col int `json:"col"`
-		}
-		if err := json.NewDecoder(r.Body).Decode(&data); err != nil {
-			http.Error(w, "JSON invalide", http.StatusBadRequest)
-			return
-		}
-		if err := controller.PlayMoveSafe(data.Col); err != nil {
-			http.Error(w, err.Error(), http.StatusBadRequest)
-			return
-		}
-		snap := controller.Snapshot()
-		switch snap.State {
-		case "Victoire joueur 1":
-			controller.ScoreJoueur1++
-		case "Victoire joueur 2":
-			controller.ScoreJoueur2++
-		}
-		json.NewEncoder(w).Encode(snap)
-	})
-
-	// --- Debug endpoint ---
-	mux.HandleFunc("/__debug", func(w http.ResponseWriter, r *http.Request) {
-		fmt.Fprintf(w, "Working dir: %s\n", wd)
-		files, _ := os.ReadDir(wd)
-		fmt.Fprintf(w, "\nContenu du dossier :\n")
-		for _, f := range files {
-			fmt.Fprintf(w, " - %s\n", f.Name())
-		}
-	})
-
 	return mux
 }
