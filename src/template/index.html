@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Puissance 4</title>
-    <!-- ✅ le bon chemin pour ton CSS -->
     <link rel="stylesheet" href="/static/styles.css">
 </head>
 <body> 
@@ -49,7 +48,7 @@
     </form>
     </section>
     </div>
-<section>
+<section class="board-section">
     <h2>Plateau</h2>
     <form method="post" action="/play">
         <div class="board">
@@ -64,8 +63,9 @@
             </div>
         </div>
     </form>
+</section>
     <!-- 🎵 Script pour les sons des rappeurs -->
-    <script>
+<script>
     document.addEventListener('DOMContentLoaded', () => {
         const sounds = {
             "1": new Audio("/sounds/sdm.mp3"),
@@ -94,7 +94,6 @@
             });
         });
     });
-    </script>
-</section>
+</script>
 </body>
 </html>
