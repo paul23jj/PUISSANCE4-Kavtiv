@@ -48,6 +48,7 @@
     </form>
     </section>
     </div>
+<a class = "jouer">JOUER</a>
 <section class="board-section">
     <h2 class="plateau">Plateau</h2>
     <form method="post" action="/play">
@@ -64,6 +65,8 @@
         </div>
     </form>
 </section>
+{{range .Grid}}
+{{end}}
     <!-- 🎵 Script pour les sons des rappeurs -->
 <script>
     document.addEventListener('DOMContentLoaded', () => {
