@@ -101,6 +101,11 @@ func Home(w http.ResponseWriter, r *http.Request) {
 		TakenPawns []string
 		Score1     int
 		Score2     int
+		BoardHTML  template.HTML
+	}
+	grid := make([][]int, 6)
+	for i := range grid {
+		grid[i] = make([]int, 7)
 	}
 
 	vd := ViewData{
@@ -108,12 +113,13 @@ func Home(w http.ResponseWriter, r *http.Request) {
 		Message:    "Bienvenue sur la page d'accueil 🎉",
 		Name1:      "Joueur 1",
 		Name2:      "Joueur 2",
-		Grid:       make([][]int, 6),
+		Grid:       grid, // ✅ on utilise la grille créée
 		PawnImg1:   "/images/pawn1.svg",
 		PawnImg2:   "/images/pawn2.svg",
 		TakenPawns: taken,
 		Score1:     ScoreJoueur1,
 		Score2:     ScoreJoueur2,
+		BoardHTML:  buildBoardHTML(grid), // ✅ pareil ici
 	}
 
 	renderTemplate(w, "index.html", vd)
@@ -182,6 +188,19 @@ func Joueur(w http.ResponseWriter, r *http.Request) {
 		"Message": "Choisis ton pion et entre ton prénom",
 	}
 	renderTemplate(w, "player.html", data)
+}
+
+func buildBoardHTML(grid [][]int) template.HTML {
+	html := "<table class='board'>"
+	for _, row := range grid {
+		html += "<tr>"
+		for _, cell := range row {
+			html += fmt.Sprintf("<td>%d</td>", cell)
+		}
+		html += "</tr>"
+	}
+	html += "</table>"
+	return template.HTML(html)
 }
 
 // --- 🔄 Réinitialise la partie ---
