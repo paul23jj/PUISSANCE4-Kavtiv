@@ -52,7 +52,7 @@
     <h2>Plateau</h2>
     <form method="post" action="/play">
         <div class="board">
-            <div class="controls">
+            <form class="controls" method="post" action="/grid">
                 <button type="submit" name="col" value="0">▼</button>
                 <button type="submit" name="col" value="1">▼</button>
                 <button type="submit" name="col" value="2">▼</button>
@@ -60,8 +60,7 @@
                 <button type="submit" name="col" value="4">▼</button>
                 <button type="submit" name="col" value="5">▼</button>
                 <button type="submit" name="col" value="6">▼</button>
-                <games-board board="{{.BoardHTML}}"></games-board>
-            </div>
+            </form>
         </div>
     </form>
 </section>
