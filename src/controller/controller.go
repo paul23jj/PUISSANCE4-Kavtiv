@@ -10,7 +10,6 @@ import (
 	"puissance4/pion"
 	"sync"
 )
-e
 // --- 🌟 Variables globales ---
 var ScoreJoueur1 int
 var ScoreJoueur2 int
