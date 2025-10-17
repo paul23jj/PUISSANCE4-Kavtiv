@@ -96,7 +96,7 @@ body {
     width: 100%;
     max-width: 900px;
 }
-.board .controls {
+.board .buttons {
     display: flex;
     gap: 8px;
     justify-content: center;
