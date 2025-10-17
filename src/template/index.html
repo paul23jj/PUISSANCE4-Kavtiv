@@ -50,9 +50,9 @@
     </div>
 <section class="board-section">
     <h2 class="plateau">Plateau</h2>
-    <form method="post" action="/play">
+    <form method="post" action="/grille">
         <div class="board">
-            <form class="buttons" method="post" action="/grid">
+            <div class="buttons">
                 <button type="submit" name="col" value="0">▼</button>
                 <button type="submit" name="col" value="1">▼</button>
                 <button type="submit" name="col" value="2">▼</button>
@@ -60,10 +60,11 @@
                 <button type="submit" name="col" value="4">▼</button>
                 <button type="submit" name="col" value="5">▼</button>
                 <button type="submit" name="col" value="6">▼</button>
-            </form>
+            </div>
         </div>
     </form>
 </section>
+
     <!-- 🎵 Script pour les sons des rappeurs -->
 <script>
     document.addEventListener('DOMContentLoaded', () => {
