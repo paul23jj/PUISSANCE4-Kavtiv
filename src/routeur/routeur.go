@@ -62,9 +62,10 @@ func New() *http.ServeMux {
 				for j := 0; j < len(snap.Grid[i]); j++ {
 					v := snap.Grid[i][j]
 					cell := "&nbsp;"
-					if v == 1 {
+					switch v {
+					case 1:
 						cell = "X"
-					} else if v == 2 {
+					case 2:
 						cell = "O"
 					}
 					fmt.Fprintf(w, "<div style='width:36px;height:36px;border:1px solid #333;display:flex;align-items:center;justify-content:center;margin:2px;'>%s</div>", cell)
@@ -99,9 +100,10 @@ func New() *http.ServeMux {
 			}
 			// mettre à jour les scores depuis le snapshot
 			snap := controller.Snapshot()
-			if snap.State == "Victoire joueur 1" {
+			switch snap.State {
+			case "Victoire joueur 1":
 				controller.ScoreJoueur1++
-			} else if snap.State == "Victoire joueur 2" {
+			case "Victoire joueur 2":
 				controller.ScoreJoueur2++
 			}
 			http.Redirect(w, r, "/grille", http.StatusSeeOther)
@@ -128,9 +130,10 @@ func New() *http.ServeMux {
 			return
 		}
 		snap := controller.Snapshot()
-		if snap.State == "Victoire joueur 1" {
+		switch snap.State {
+		case "Victoire joueur 1":
 			controller.ScoreJoueur1++
-		} else if snap.State == "Victoire joueur 2" {
+		case "Victoire joueur 2":
 			controller.ScoreJoueur2++
 		}
 		json.NewEncoder(w).Encode(snap)
