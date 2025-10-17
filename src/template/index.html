@@ -61,6 +61,7 @@
                 <button type="submit" name="col" value="4">▼</button>
                 <button type="submit" name="col" value="5">▼</button>
                 <button type="submit" name="col" value="6">▼</button>
+                <games-board board="{{.BoardHTML}}"></games-board>
             </div>
         </div>
     </form>
@@ -79,7 +80,6 @@
             "9": new Audio("/sounds/niska.mp3"),
             "10": new Audio("/sounds/jul.mp3"),
         };
-
         // Quand un joueur valide son pion → joue le son correspondant
         document.querySelectorAll('form').forEach(form => {
             form.addEventListener('submit', e => {

@@ -8,12 +8,64 @@ import (
 	"os"
 	"path/filepath"
 	"puissance4/pion"
+	"sync"
 )
 
 // --- 🌟 Variables globales ---
 var ScoreJoueur1 int
 var ScoreJoueur2 int
 var gameInstance *pion.Game
+var gameMu sync.Mutex
+
+// GameSnapshot est une copie en lecture seule de l'état du jeu
+type GameSnapshot struct {
+	Grid   [][]int
+	Player int
+	State  string
+}
+
+// PlayMoveSafe joue un coup en protégeant l'accès concurrent à l'instance de jeu
+func PlayMoveSafe(col int) error {
+	gameMu.Lock()
+	defer gameMu.Unlock()
+	if gameInstance == nil {
+		return fmt.Errorf("jeu non initialisé")
+	}
+	return gameInstance.PlayMove(col)
+}
+
+// Snapshot retourne une copie sûre de l'état courant du jeu
+func Snapshot() GameSnapshot {
+	gameMu.Lock()
+	defer gameMu.Unlock()
+	snap := GameSnapshot{}
+	if gameInstance == nil {
+		return snap
+	}
+	// copie la grille
+	rows := len(gameInstance.Board.Grid)
+	cols := len(gameInstance.Board.Grid[0])
+	g := make([][]int, rows)
+	for r := 0; r < rows; r++ {
+		g[r] = make([]int, cols)
+		for c := 0; c < cols; c++ {
+			g[r][c] = int(gameInstance.Board.Grid[r][c])
+		}
+	}
+	snap.Grid = g
+	snap.Player = gameInstance.Player
+	snap.State = gameInstance.LastState
+	return snap
+}
+
+// ResetGame réinitialise la partie courante (thread-safe)
+func ResetGame() {
+	gameMu.Lock()
+	defer gameMu.Unlock()
+	if gameInstance != nil {
+		*gameInstance = *pion.NewGame()
+	}
+}
 
 // --- ⚙️ Fonctions utilitaires pour les templates ---
 var funcMap = template.FuncMap{
@@ -24,6 +76,13 @@ var funcMap = template.FuncMap{
 			}
 		}
 		return false
+	},
+	"seq": func(n int) []int {
+		s := make([]int, n)
+		for i := 0; i < n; i++ {
+			s[i] = i
+		}
+		return s
 	},
 }
 
@@ -108,12 +167,21 @@ func Home(w http.ResponseWriter, r *http.Request) {
 		grid[i] = make([]int, 7)
 	}
 
+	// utilise un snapshot sécurisé du jeu
+	snap := Snapshot()
+
 	vd := ViewData{
 		Title:      "Puissance 4",
 		Message:    "Bienvenue sur la page d'accueil 🎉",
 		Name1:      "Joueur 1",
 		Name2:      "Joueur 2",
+<<<<<<< HEAD
 		Grid:       grid, // ✅ on utilise la grille créée
+=======
+		Grid:       snap.Grid,
+		Player:     snap.Player,
+		State:      snap.State,
+>>>>>>> cb3a343b4a321736130ab5a56bf2c3c11e81334c
 		PawnImg1:   "/images/pawn1.svg",
 		PawnImg2:   "/images/pawn2.svg",
 		TakenPawns: taken,
