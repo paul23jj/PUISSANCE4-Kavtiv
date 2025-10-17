@@ -13,10 +13,10 @@ type Board struct {
 
 // 🌟 Structure qui gère une partie
 type Game struct {
-	Board     Board `json:"board"`  // état du plateau
-	Player    int   `json:"player"` // joueur courant (1 ou 2)
-	LastState string `json:"state"` // "En cours", "Victoire joueur X", "Match nul"
-} 
+	Board     Board  `json:"board"`  // état du plateau
+	Player    int    `json:"player"` // joueur courant (1 ou 2)
+	LastState string `json:"state"`  // "En cours", "Victoire joueur X", "Match nul"
+}
 
 // 🌟 Constructeur d’une nouvelle partie
 func NewGame() *Game {
@@ -112,6 +112,18 @@ func (b *Board) GameState(lastRow, lastCol, player int) string {
 		return "Match nul"
 	}
 	return "En cours"
+}
+
+// GridSlice retourne une copie de la grille sous forme de slice [][]int
+func (b *Board) GridSlice() [][]int {
+	g := make([][]int, Rows)
+	for r := 0; r < Rows; r++ {
+		g[r] = make([]int, Cols)
+		for c := 0; c < Cols; c++ {
+			g[r][c] = b.Grid[r][c]
+		}
+	}
+	return g
 }
 
 func ExampleUsage() {
