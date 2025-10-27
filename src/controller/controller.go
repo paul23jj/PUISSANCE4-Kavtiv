@@ -43,16 +43,11 @@ func Snapshot() GameSnapshot {
 		return snap
 	}
 	// copie la grille
-	rows := len(gameInstance.Board.Grid)
-	cols := len(gameInstance.Board.Grid[0])
-	g := make([][]int, rows)
-	for r := 0; r < rows; r++ {
-		g[r] = make([]int, cols)
-		for c := 0; c < cols; c++ {
-			g[r][c] = int(gameInstance.Board.Grid[r][c])
+	for r := 0; r < 6; r++ {
+		for c := 0; c < 7; c++ {
+			snap.Grid[r][c] = int(gameInstance.Board.Grid[r][c])
 		}
 	}
-	snap.Grid = g
 	snap.Player = gameInstance.Player
 	snap.State = gameInstance.LastState
 	return snap
