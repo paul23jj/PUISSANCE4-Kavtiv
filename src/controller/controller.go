@@ -10,6 +10,7 @@ import (
 	"puissance4/pion"
 	"sync"
 )
+
 // --- 🌟 Variables globales ---
 var ScoreJoueur1 int
 var ScoreJoueur2 int
@@ -83,6 +84,9 @@ var funcMap = template.FuncMap{
 		}
 		return s
 	},
+	"eq": func(a, b int) bool {
+		return a == b
+	},
 }
 
 // --- 🧱 Rendu d’un template avec recherche automatique ---
@@ -127,6 +131,33 @@ func renderTemplate(w http.ResponseWriter, filename string, data interface{}) {
 // --- 🧩 Injection du jeu ---
 func SetGame(g *pion.Game) {
 	gameInstance = g
+}
+
+// RenderGrid rend la template server-side de la grille en lisant les cookies
+func RenderGrid(w http.ResponseWriter, r *http.Request) {
+	snap := Snapshot()
+
+	pawn1 := "/images/pawn1.svg"
+	pawn2 := "/images/pawn2.svg"
+
+	if c, err := r.Cookie("pionJoueur1"); err == nil && c.Value != "" {
+		pawn1 = "/images/" + c.Value
+	}
+	if c, err := r.Cookie("pionJoueur2"); err == nil && c.Value != "" {
+		pawn2 = "/images/" + c.Value
+	}
+
+	data := map[string]interface{}{
+		"Grid":     snap.Grid,
+		"Player":   snap.Player,
+		"State":    snap.State,
+		"PawnImg1": pawn1,
+		"PawnImg2": pawn2,
+		"Score1":   ScoreJoueur1,
+		"Score2":   ScoreJoueur2,
+	}
+
+	renderTemplate(w, "grille.html", data)
 }
 
 // --- 🏠 Page d’accueil ---

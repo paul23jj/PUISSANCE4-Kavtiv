@@ -50,36 +50,8 @@ func New() *http.ServeMux {
 	mux.HandleFunc("/grille", func(w http.ResponseWriter, r *http.Request) {
 		switch r.Method {
 		case http.MethodGet:
-			// construire HTML minimal affichant la grille et boutons
-			w.Header().Set("Content-Type", "text/html; charset=utf-8")
-			fmt.Fprintln(w, "<html><head><title>Grille Puissance 4</title></head><body>")
-			fmt.Fprintln(w, "<h1>Grille (jeu)</h1>")
-			// utiliser Snapshot thread-safe du controller
-			snap := controller.Snapshot()
-			for i := 0; i < len(snap.Grid); i++ {
-				fmt.Fprint(w, "<div style='display:flex'>")
-				for j := 0; j < len(snap.Grid[i]); j++ {
-					v := snap.Grid[i][j]
-					cell := "&nbsp;"
-					switch v {
-					case 1:
-						cell = "X"
-					case 2:
-						cell = "O"
-					}
-					fmt.Fprintf(w, "<div style='width:36px;height:36px;border:1px solid #333;display:flex;align-items:center;justify-content:center;margin:2px;'>%s</div>", cell)
-				}
-				fmt.Fprintln(w, "</div>")
-			}
-
-			// formulaire de jeu
-			fmt.Fprintln(w, "<form method='post' action='/grille'>")
-			for c := 0; c < 7; c++ {
-				fmt.Fprintf(w, "<button type='submit' name='col' value='%d'>%d</button>", c, c+1)
-			}
-			fmt.Fprintln(w, "</form>")
-			fmt.Fprintln(w, "<p><a href='/'>Retour accueil</a></p>")
-			fmt.Fprintln(w, "</body></html>")
+			// render via template server-side
+			controller.RenderGrid(w, r)
 		case http.MethodPost:
 			if err := r.ParseForm(); err != nil {
 				http.Error(w, "form error", http.StatusBadRequest)
