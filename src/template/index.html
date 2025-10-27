@@ -48,10 +48,10 @@
     </form>
     </section>
     </div>
-<a class = "jouer">JOUER</a>
+<a class = "jouer"></a>
 <section class="board-section">
     <h2 class="plateau">Plateau</h2>
-    <form method="post" action="/grille">
+    <form method="post" action="jeu">
         <div class="board">
             <div class="buttons">
                 <button type="submit" name="col" value="0">▼</button>
@@ -65,12 +65,6 @@
         </div>
     </form>
 </section>
-<<<<<<< HEAD
-{{range .Grid}}
-{{end}}
-=======
-
->>>>>>> c16c749c2977296d73e986dc42533496e3c3e758
     <!-- 🎵 Script pour les sons des rappeurs -->
 <script>
     document.addEventListener('DOMContentLoaded', () => {
@@ -133,5 +127,50 @@
 
   renderBoard();
 </script>
+<div class="Jeu">
+  <style>
+    .grid { border-collapse: collapse; margin: 12px 0; }
+    .grid td { width: 56px; height: 56px; border: 2px solid #123; background: #87cefa; text-align:center; vertical-align:middle; }
+    .cell-empty { width:40px; height:40px; border-radius:50%; background:#fff; margin:auto; }
+    .pawn { width:40px; height:40px; border-radius:50%; display:block; margin:auto; }
+    .controls { margin-bottom:8px; }
+    .scores { margin-top:8px; }
+  </style>
+</head>
+<body>
+  <h1>Puissance 4</h1>
+  <p>Joueur courant: {{.Player}} — État: {{.State}}</p>
+
+  <form method="post" action="/grille">
+    <div class="controls">
+      {{range $i := seq 7}}
+        <button type="submit" name="col" value="{{$i}}">▼</button>
+      {{end}}
+    </div>
+  </form>
+
+  <table class="grid" role="grid" aria-label="Plateau Puissance 4">
+    {{range $r := .Grid}}
+      <tr>
+        {{range $c := $r}}
+          <td>
+            {{if eq $c 0}}
+              <div class="cell-empty"></div>
+            {{else if eq $c 1}}
+              <img src="{{$.PawnImg1}}" alt="Pion 1" class="pawn">
+            {{else}}
+              <img src="{{$.PawnImg2}}" alt="Pion 2" class="pawn">
+            {{end}}
+          </td>
+        {{end}}
+      </tr>
+    {{end}}
+  </table>
+
+  <div class="scores">
+    <strong>Score:</strong> Joueur 1 = {{.Score1}} — Joueur 2 = {{.Score2}}
+  </div>
+
+  <p><a href="/">Retour accueil</a></p>
 </body>
 </html>
