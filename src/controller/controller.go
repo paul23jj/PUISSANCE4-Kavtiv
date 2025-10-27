@@ -134,6 +134,7 @@ func RenderGrid(w http.ResponseWriter, r *http.Request) {
 
 	pawn1 := "/images/pawn1.svg"
 	pawn2 := "/images/pawn2.svg"
+
 	if c, err := r.Cookie("pionJoueur1"); err == nil && c.Value != "" {
 		pawn1 = "/images/" + c.Value
 	}
@@ -141,39 +142,17 @@ func RenderGrid(w http.ResponseWriter, r *http.Request) {
 		pawn2 = "/images/" + c.Value
 	}
 
-	// Conteneur principal
-	fmt.Fprintln(w, `<div class="jeu">`)
-
-	// État du jeu
-	fmt.Fprintf(w, `<p>État du jeu : %s</p>`, snap.State)
-
-	// Grille simple en HTML
-	fmt.Fprintln(w, `<table class="grille">`)
-	for rIdx := 0; rIdx < 6; rIdx++ {
-		fmt.Fprintln(w, "<tr>")
-		for cIdx := 0; cIdx < 7; cIdx++ {
-			v := snap.Grid[rIdx][cIdx]
-			switch v {
-			case 1:
-				fmt.Fprintf(w, `<td><img src="%s" alt="Joueur 1" class="pion" /></td>`, pawn1)
-			case 2:
-				fmt.Fprintf(w, `<td><img src="%s" alt="Joueur 2" class="pion" /></td>`, pawn2)
-			default:
-				fmt.Fprintln(w, `<td class="vide"></td>`)
-			}
-		}
-		fmt.Fprintln(w, "</tr>")
-	}
-	fmt.Fprintln(w, "</table>")
-
-	// Bouton de réinitialisation si la partie est terminée
-	if snap.State != "En cours" {
-		fmt.Fprintln(w, `<form action="/reset" method="post" style="margin-top:10px;">`)
-		fmt.Fprintln(w, `<button type="submit">Remettre la grille à zéro</button>`)
-		fmt.Fprintln(w, `</form>`)
+	data := map[string]interface{}{
+		"Grid":     snap.Grid,
+		"Player":   snap.Player,
+		"State":    snap.State,
+		"PawnImg1": pawn1,
+		"PawnImg2": pawn2,
+		"Score1":   ScoreJoueur1,
+		"Score2":   ScoreJoueur2,
 	}
 
-	fmt.Fprintln(w, `</div>`)
+	renderTemplate(w, "grille.html", data)
 }
 
 // --- 🏠 Page d’accueil ---
