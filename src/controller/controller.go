@@ -9,6 +9,7 @@ import (
 	"path/filepath"
 	"puissance4/pion"
 	"sync"
+	"time"
 )
 
 // --- 🌟 Variables globales ---
@@ -27,11 +28,28 @@ type GameSnapshot struct {
 // PlayMoveSafe joue un coup en protégeant l'accès concurrent à l'instance de jeu
 func PlayMoveSafe(col int) error {
 	gameMu.Lock()
-	defer gameMu.Unlock()
 	if gameInstance == nil {
+		gameMu.Unlock()
 		return fmt.Errorf("jeu non initialisé")
 	}
-	return gameInstance.PlayMove(col)
+
+	// état avant le coup
+	prevState := gameInstance.LastState
+
+	// joue le coup (met à jour LastState)
+	err := gameInstance.PlayMove(col)
+	state := gameInstance.LastState
+	gameMu.Unlock()
+
+	// réinitialisation différée seulement si état a changé
+	if prevState == "En cours" && state != "En cours" {
+		go func() {
+			time.Sleep(3 * time.Second)
+			ResetGame()
+		}()
+	}
+
+	return err
 }
 
 // Snapshot retourne une copie sûre de l'état courant du jeu

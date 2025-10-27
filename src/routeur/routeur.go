@@ -70,13 +70,6 @@ func New() *http.ServeMux {
 				return
 			}
 			// mettre à jour les scores depuis le snapshot
-			snap := controller.Snapshot()
-			switch snap.State {
-			case "Victoire joueur 1":
-				controller.ScoreJoueur1++
-			case "Victoire joueur 2":
-				controller.ScoreJoueur2++
-			}
 			http.Redirect(w, r, "/grille", http.StatusSeeOther)
 		default:
 			http.Error(w, "Méthode non autorisée", http.StatusMethodNotAllowed)
