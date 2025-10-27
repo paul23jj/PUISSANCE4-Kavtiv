@@ -160,13 +160,15 @@ func SetGame(g *pion.Game) {
 func RenderGrid(w http.ResponseWriter, r *http.Request) {
 	snap := Snapshot()
 
-	pawn1 := "/images/pawn1.svg"
+	pawn1 := "/images/booba.png"
 	pawn2 := "/images/pawn2.svg"
 
 	if c, err := r.Cookie("pionJoueur1"); err == nil && c.Value != "" {
-		pawn1 = "/images/" + c.Value
+		fmt.Print("coucou", c.Value)
+		pawn1 = "/images/" + "booba.png"
 	}
 	if c, err := r.Cookie("pionJoueur2"); err == nil && c.Value != "" {
+		fmt.Print("coucou", c.Value)
 		pawn2 = "/images/" + c.Value
 	}
 
@@ -260,7 +262,7 @@ func Joueur(w http.ResponseWriter, r *http.Request) {
 		pionChoisi := r.FormValue("pion")
 
 		// --- Upload d’image ---
-		file, header, err := r.FormFile("photo")
+		file, _, err := r.FormFile("customImage")
 		var imgName string
 		if err == nil && file != nil {
 			defer file.Close()
@@ -268,12 +270,8 @@ func Joueur(w http.ResponseWriter, r *http.Request) {
 			imagesDir := filepath.Join("src", "images")
 			os.MkdirAll(imagesDir, 0755)
 
-			ext := filepath.Ext(header.Filename)
-			if ext == "" {
-				ext = ".png"
-			}
 
-			imgName = fmt.Sprintf("pawn%s%s", joueur, ext)
+			imgName = fmt.Sprintf(joueur)
 			outPath := filepath.Join(imagesDir, imgName)
 
 			outFile, ferr := os.Create(outPath)
@@ -281,10 +279,10 @@ func Joueur(w http.ResponseWriter, r *http.Request) {
 				defer outFile.Close()
 				io.Copy(outFile, file)
 			} else {
-				imgName = fmt.Sprintf("pawn%s.svg", pionChoisi)
+				imgName = fmt.Sprintf(pionChoisi)
 			}
 		} else {
-			imgName = fmt.Sprintf("pawn%s.svg", pionChoisi)
+			imgName = fmt.Sprintf(pionChoisi)
 		}
 
 		// --- Cookies joueurs ---

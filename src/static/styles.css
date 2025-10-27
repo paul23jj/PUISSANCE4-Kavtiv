@@ -83,10 +83,25 @@ body {
     margin: 20px 0;
 }
 
-.players-row { display:flex; gap:20px; justify-content:space-between; align-items:flex-start; padding: 16px; }
-.pion-selection { flex: 1 1 45%; background-color: rgba(255,255,255,0.85); padding:12px; border-radius:8px }
-.pions-1 { justify-content:flex-start }
-.pions-2 { justify-content:flex-end }
+.players-row {
+    display: flex;
+    gap: 20px;
+    justify-content: space-between;
+    align-items: flex-start;
+    padding: 16px;
+}
+.pion-selection {
+    flex: 1 1 45%;
+    background-color: rgba(255, 255, 255, 0.85);
+    padding: 12px;
+    border-radius: 8px;
+}
+.pions-1 {
+    justify-content: flex-start;
+}
+.pions-2 {
+    justify-content: flex-end;
+}
 .board-section {
     display: flex;
     flex-direction: column;
@@ -128,4 +143,138 @@ body {
     padding: 10px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
-.row
+.grid {
+    border-collapse: collapse;
+    margin: 12px 0;
+}
+.grid td {
+    width: 56px;
+    height: 56px;
+    border: 2px solid #123;
+    background: #87cefa;
+    text-align:center;
+    vertical-align:middle;
+}
+.cell-empty {
+    width:40px;
+    height:40px;
+    border-radius:50%;
+    background:#fff;
+    margin:auto;
+}
+.pawn {
+    width:40px;
+    height:40px;
+    border-radius:50%;
+    display:block;
+    margin:auto;
+}
+.controls {
+    margin-bottom:8px;
+}
+.scores {
+    margin-top:8px;
+}
+.current-player {
+    color: white;
+    text-align: center;
+    font-size: 2rem;
+    text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.7);
+}
+.fleches {
+    margin: 0 auto;
+} /* revenir apres pour ajuster les fleches */
+/* Remplacer les anciennes règles .grid etc. par ce bloc scoped à .grille */
+.grille {
+    min-height: auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 28px 12px;
+    box-sizing: border-box;
+    gap: 12px;
+}
+
+/* controls (flèches) */
+.grille .fleches {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    margin-bottom: 10px;
+}
+.grille .fleches button {
+    background: linear-gradient(180deg,#1e6fd8,#145aa8);
+    color: #fff;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 16px;
+}
+.grille .fleches button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+/* plateau : conteneur bleu avec padding */
+.grille table.grille {
+    background: #0d4ea3; /* bleu principal */
+    padding: 14px;
+    border-radius: 12px;
+    box-shadow: 0 8px 24px rgba(10,20,40,0.25);
+    border-collapse: separate;
+    border-spacing: 8px;
+}
+
+/* cellules : layout responsive */
+.grille table.grille td {
+    width: 64px;
+    height: 64px;
+    padding: 0;
+    background: transparent;
+    vertical-align: middle;
+}
+
+/* "trou" blanc */
+.grille .cell-empty {
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    background: linear-gradient(180deg,#ffffff,#e6f0ff);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: inset 0 -6px 10px rgba(0,0,0,0.15);
+}
+
+/* pion image */
+.grille .pawn {
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    object-fit: cover;
+    display: block;
+    box-shadow: 0 6px 12px rgba(0,0,0,0.25);
+}
+
+/* scores / info */
+.grille .scores {
+    color: #fff;
+    background: rgba(0,0,0,0.15);
+    padding: 8px 12px;
+    border-radius: 8px;
+}
+
+/* current player text */
+.grille .current-player {
+    color: #fff;
+    font-size: 1.1rem;
+    text-shadow: 0 2px 6px rgba(0,0,0,0.45);
+}
+
+/* responsive : réduire taille des cellules sur petits écrans */
+@media (max-width: 600px) {
+    .grille table.grille td { width: 44px; height: 44px; }
+    .grille .cell-empty, .grille .pawn { width: 40px; height: 40px; }
+    .grille .fleches button { padding: 6px 8px; font-size: 14px; }
+}

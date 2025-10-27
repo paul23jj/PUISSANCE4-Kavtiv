@@ -14,16 +14,16 @@
     <form method="post" action="/joueur" enctype="multipart/form-data">
         <input type="hidden" name="joueur" value="1">
         <div class="pions-1">
-            <label><input type="radio" name="pion" value="1" required {{if inSlice "pawn1.svg" .TakenPawns}}disabled{{end}}> <img src="../images/sdm.jpg" alt="SDM" width="64"></label>
-            <label><input type="radio" name="pion" value="2" {{if inSlice "pawn2.svg" .TakenPawns}}disabled{{end}}> <img src="../images/kaaris.webp" alt="Karis" width="64"></label>
-            <label><input type="radio" name="pion" value="3" {{if inSlice "pawn3.svg" .TakenPawns}}disabled{{end}}> <img src="../images/booba.png" alt="Booba" width="64"></label>
-            <label><input type="radio" name="pion" value="4" {{if inSlice "pawn4.svg" .TakenPawns}}disabled{{end}}> <img src="../images/naps.jpg" alt="Naps" width="64"></label>
-            <label><input type="radio" name="pion" value="5" {{if inSlice "pawn5.svg" .TakenPawns}}disabled{{end}}> <img src="../images/damso.jpg" alt="Damso" width="64"></label>
-            <label><input type="radio" name="pion" value="6" {{if inSlice "pawn6.svg" .TakenPawns}}disabled{{end}}> <img src="../images/tiako.jpg" alt="Tiako" width="64"></label>
-            <label><input type="radio" name="pion" value="7" {{if inSlice "pawn7.svg" .TakenPawns}}disabled{{end}}> <img src="../images/leto.jpg" alt="Leto" width="64"></label>
-            <label><input type="radio" name="pion" value="8" {{if inSlice "pawn8.svg" .TakenPawns}}disabled{{end}}> <img src="../images/plk.jpg" alt="PLK" width="64"></label>
-            <label><input type="radio" name="pion" value="9" {{if inSlice "pawn9.svg" .TakenPawns}}disabled{{end}}> <img src="../images/niska.jpg" alt="Niska" width="64"></label>
-            <label><input type="radio" name="pion" value="10" {{if inSlice "pawn10.svg" .TakenPawns}}disabled{{end}}> <img src="../images/jul.jpg" alt="Jul" width="64"></label>
+            <label><input type="radio" name="pion" value="sdm.jpg" required {{if inSlice "pawn1.svg" .TakenPawns}}disabled{{end}}> <img src="../images/sdm.jpg" alt="SDM" width="64"></label>
+            <label><input type="radio" name="pion" value="kaaris.webp" {{if inSlice "pawn2.svg" .TakenPawns}}disabled{{end}}> <img src="../images/kaaris.webp" alt="Karis" width="64"></label>
+            <label><input type="radio" name="pion" value="booba.png" {{if inSlice "pawn3.svg" .TakenPawns}}disabled{{end}}> <img src="../images/booba.png" alt="Booba" width="64"></label>
+            <label><input type="radio" name="pion" value="naps.jpg" {{if inSlice "pawn4.svg" .TakenPawns}}disabled{{end}}> <img src="../images/naps.jpg" alt="Naps" width="64"></label>
+            <label><input type="radio" name="pion" value="damso.jpg" {{if inSlice "pawn5.svg" .TakenPawns}}disabled{{end}}> <img src="../images/damso.jpg" alt="Damso" width="64"></label>
+            <label><input type="radio" name="pion" value="tiako.jpg" {{if inSlice "pawn6.svg" .TakenPawns}}disabled{{end}}> <img src="../images/tiako.jpg" alt="Tiako" width="64"></label>
+            <label><input type="radio" name="pion" value="leto.jpg" {{if inSlice "pawn7.svg" .TakenPawns}}disabled{{end}}> <img src="../images/leto.jpg" alt="Leto" width="64"></label>
+            <label><input type="radio" name="pion" value="plk.jpg" {{if inSlice "pawn8.svg" .TakenPawns}}disabled{{end}}> <img src="../images/plk.jpg" alt="PLK" width="64"></label>
+            <label><input type="radio" name="pion" value="niska.jpg" {{if inSlice "pawn9.svg" .TakenPawns}}disabled{{end}}> <img src="../images/niska.jpg" alt="Niska" width="64"></label>
+            <label><input type="radio" name="pion" value="jul.jpg" {{if inSlice "pawn10.svg" .TakenPawns}}disabled{{end}}> <img src="../images/jul.jpg" alt="Jul" width="64"></label>
         </div>
         <button type="submit">Valider Joueur 1</button>
     </form>
@@ -33,16 +33,16 @@
     <form method="post" action="/joueur" enctype="multipart/form-data">
         <input type="hidden" name="joueur" value="2">
         <div class="pions-2">
-            <label><input type="radio" name="pion" value="1" required {{if inSlice "pawn1.svg" .TakenPawns}}disabled{{end}}> <img src="../images/sdm.jpg" alt="SDM" width="64"></label>
-            <label><input type="radio" name="pion" value="2" {{if inSlice "pawn2.svg" .TakenPawns}}disabled{{end}}> <img src="../images/kaaris.webp" alt="Karis" width="64"></label>
-            <label><input type="radio" name="pion" value="3" {{if inSlice "pawn3.svg" .TakenPawns}}disabled{{end}}> <img src="../images/booba.png" alt="Booba" width="64"></label>
-            <label><input type="radio" name="pion" value="4" {{if inSlice "pawn4.svg" .TakenPawns}}disabled{{end}}> <img src="../images/naps.jpg" alt="Naps" width="64"></label>
-            <label><input type="radio" name="pion" value="5" {{if inSlice "pawn5.svg" .TakenPawns}}disabled{{end}}> <img src="../images/damso.jpg" alt="Damso" width="64"></label>
-            <label><input type="radio" name="pion" value="6" {{if inSlice "pawn6.svg" .TakenPawns}}disabled{{end}}> <img src="../images/tiako.jpg" alt="Tiako" width="64"></label>
-            <label><input type="radio" name="pion" value="7" {{if inSlice "pawn7.svg" .TakenPawns}}disabled{{end}}> <img src="../images/leto.jpg" alt="Leto" width="64"></label>
-            <label><input type="radio" name="pion" value="8" {{if inSlice "pawn8.svg" .TakenPawns}}disabled{{end}}> <img src="../images/plk.jpg" alt="PLK" width="64"></label>
-            <label><input type="radio" name="pion" value="9" {{if inSlice "pawn9.svg" .TakenPawns}}disabled{{end}}> <img src="../images/niska.jpg" alt="Niska" width="64"></label>
-            <label><input type="radio" name="pion" value="10" {{if inSlice "pawn10.svg" .TakenPawns}}disabled{{end}}> <img src="../images/jul.jpg" alt="Jul" width="64"></label>
+            <label><input type="radio" name="pion" value="sdm.jpg" required {{if inSlice "pawn1.svg" .TakenPawns}}disabled{{end}}> <img src="../images/sdm.jpg" alt="SDM" width="64"></label>
+            <label><input type="radio" name="pion" value="kaaris.webp" {{if inSlice "pawn2.svg" .TakenPawns}}disabled{{end}}> <img src="../images/kaaris.webp" alt="Karis" width="64"></label>
+            <label><input type="radio" name="pion" value="booba.png" {{if inSlice "pawn3.svg" .TakenPawns}}disabled{{end}}> <img src="../images/booba.png" alt="Booba" width="64"></label>
+            <label><input type="radio" name="pion" value="naps.jpg" {{if inSlice "pawn4.svg" .TakenPawns}}disabled{{end}}> <img src="../images/naps.jpg" alt="Naps" width="64"></label>
+            <label><input type="radio" name="pion" value="damso.jpg" {{if inSlice "pawn5.svg" .TakenPawns}}disabled{{end}}> <img src="../images/damso.jpg" alt="Damso" width="64"></label>
+            <label><input type="radio" name="pion" value="tiako.jpg" {{if inSlice "pawn6.svg" .TakenPawns}}disabled{{end}}> <img src="../images/tiako.jpg" alt="Tiako" width="64"></label>
+            <label><input type="radio" name="pion" value="leto.jpg" {{if inSlice "pawn7.svg" .TakenPawns}}disabled{{end}}> <img src="../images/leto.jpg" alt="Leto" width="64"></label>
+            <label><input type="radio" name="pion" value="plk.jpg" {{if inSlice "pawn8.svg" .TakenPawns}}disabled{{end}}> <img src="../images/plk.jpg" alt="PLK" width="64"></label>
+            <label><input type="radio" name="pion" value="niska.jpg" {{if inSlice "pawn9.svg" .TakenPawns}}disabled{{end}}> <img src="../images/niska.jpg" alt="Niska" width="64"></label>
+            <label><input type="radio" name="pion" value="jul.jpg" {{if inSlice "pawn10.svg" .TakenPawns}}disabled{{end}}> <img src="../images/jul.jpg" alt="Jul" width="64"></label>
         </div>
         <button type="submit">Valider Joueur 2</button>
     </form>
@@ -65,6 +65,7 @@
         </div>
     </form>
 </section>
+</table>
     <!-- 🎵 Script pour les sons des rappeurs -->
 <script>
     document.addEventListener('DOMContentLoaded', () => {
