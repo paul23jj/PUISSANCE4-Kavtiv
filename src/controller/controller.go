@@ -19,7 +19,7 @@ var gameMu sync.Mutex
 
 // GameSnapshot est une copie en lecture seule de l'état du jeu
 type GameSnapshot struct {
-	Grid   [][]int
+	Grid   [6][7]int
 	Player int
 	State  string
 }
@@ -180,7 +180,7 @@ func Home(w http.ResponseWriter, r *http.Request) {
 	type ViewData struct {
 		Title      string
 		Message    string
-		Grid       [][]int
+		Grid       [6][7]int
 		Player     int
 		State      string
 		Name1      string
