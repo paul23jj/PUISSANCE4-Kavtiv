@@ -5,16 +5,8 @@
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>Grille - Puissance 4</title>
   <link rel="stylesheet" href="/static/styles.css">
-  <style>
-    .grid { border-collapse: collapse; margin: 12px 0; }
-    .grid td { width: 56px; height: 56px; border: 2px solid #123; background: #87cefa; text-align:center; vertical-align:middle; }
-    .cell-empty { width:40px; height:40px; border-radius:50%; background:#fff; margin:auto; }
-    .pawn { width:40px; height:40px; border-radius:50%; display:block; margin:auto; }
-    .controls { margin-bottom:8px; }
-    .scores { margin-top:8px; }
-  </style>
 </head>
-<body>
+<body class="grid">
   <h1>Puissance 4</h1>
   <p>Joueur courant: {{.Player}} — État: {{.State}}</p>
 

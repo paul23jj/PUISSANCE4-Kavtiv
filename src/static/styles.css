@@ -83,10 +83,25 @@ body {
     margin: 20px 0;
 }
 
-.players-row { display:flex; gap:20px; justify-content:space-between; align-items:flex-start; padding: 16px; }
-.pion-selection { flex: 1 1 45%; background-color: rgba(255,255,255,0.85); padding:12px; border-radius:8px }
-.pions-1 { justify-content:flex-start }
-.pions-2 { justify-content:flex-end }
+.players-row {
+    display: flex;
+    gap: 20px;
+    justify-content: space-between;
+    align-items: flex-start;
+    padding: 16px;
+}
+.pion-selection {
+    flex: 1 1 45%;
+    background-color: rgba(255, 255, 255, 0.85);
+    padding: 12px;
+    border-radius: 8px;
+}
+.pions-1 {
+    justify-content: flex-start;
+}
+.pions-2 {
+    justify-content: flex-end;
+}
 .board-section {
     display: flex;
     flex-direction: column;
@@ -128,4 +143,35 @@ body {
     padding: 10px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
-.row
+.grid {
+    border-collapse: collapse;
+    margin: 12px 0;
+}
+.grid td {
+    width: 56px;
+    height: 56px;
+    border: 2px solid #123;
+    background: #87cefa;
+    text-align:center;
+    vertical-align:middle;
+}
+.cell-empty {
+    width:40px;
+    height:40px;
+    border-radius:50%;
+    background:#fff;
+    margin:auto;
+}
+.pawn {
+    width:40px;
+    height:40px;
+    border-radius:50%;
+    display:block;
+    margin:auto;
+}
+.controls {
+    margin-bottom:8px;
+}
+.scores {
+    margin-top:8px;
+}
