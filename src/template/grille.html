@@ -44,3 +44,14 @@
   <p><a href="/">Retour accueil</a></p>
 </body>
 </html>
+<div id="game-meta"
+     data-last-player="{{if.LastMove}}{{.LastMove.player}}{{else}}0{{end}}"
+     data-winner="{{winner}}">
+  </div> 
+
+ <audio id="p1-snd" src="/soundtrack/{{index .Players 1}}.mp3" preload="auto"></audio>
+ <audio id="p2-snd" src ="/soundtrack/{{index .players 2}}.mp3" preload="auto"></audio>
+
+<script defer src="/soundtrack/sound.js"></script>
+</body>
+</html>
