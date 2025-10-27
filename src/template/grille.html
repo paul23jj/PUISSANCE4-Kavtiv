@@ -5,20 +5,21 @@
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>Grille - Puissance 4</title>
   <link rel="stylesheet" href="/static/styles.css">
+  <link rel="icon" type="image/x-icon" href="/src/images/favicon.ico">
 </head>
-<body class="grid">
-  <h1>Puissance 4</h1>
-  <p>Joueur courant: {{.Player}} — État: {{.State}}</p>
+<body class="grille">
+  <h1 class="title">Puissance 4</h1>
+  <p class="current-player">Joueur courant: {{.Player}} — État: {{.State}}</p>
 
   <form method="post" action="/grille">
-    <div class="controls">
+    <div class="fleches">
       {{range $i := seq 7}}
         <button type="submit" name="col" value="{{$i}}">▼</button>
       {{end}}
     </div>
   </form>
 
-  <table class="grid" role="grid" aria-label="Plateau Puissance 4">
+  <table class="grille" role="grille" aria-label="Plateau Puissance 4">
     {{range $r := .Grid}}
       <tr>
         {{range $c := $r}}
