@@ -39,6 +39,16 @@ func PlayMoveSafe(col int) error {
 	// joue le coup (met à jour LastState)
 	err := gameInstance.PlayMove(col)
 	state := gameInstance.LastState
+
+	// n'incrémente le score que si on est passé de "En cours" → "Victoire ..."
+	if prevState == "En cours" {
+		if state == "Victoire joueur 1" {
+			ScoreJoueur1++
+		} else if state == "Victoire joueur 2" {
+			ScoreJoueur2++
+		}
+	}
+
 	gameMu.Unlock()
 
 	// réinitialisation différée seulement si état a changé
