@@ -9,7 +9,6 @@ import (
 	"path/filepath"
 	"puissance4/pion"
 	"sync"
-	"time"
 )
 
 // --- 🌟 Variables globales ---
@@ -33,7 +32,13 @@ func PlayMoveSafe(col int) error {
 		return fmt.Errorf("jeu non initialisé")
 	}
 
-	// état avant le coup
+	// Si la partie est déjà terminée (victoire / nul) et quelqu'un tente de jouer,
+	// on réinitialise la partie AVANT d'appliquer le nouveau coup.
+	if gameInstance.LastState != "En cours" {
+		*gameInstance = *pion.NewGame()
+	}
+
+	// état avant le coup (devrait être "En cours" après l'éventuelle réinitialisation)
 	prevState := gameInstance.LastState
 
 	// joue le coup (met à jour LastState)
@@ -51,14 +56,8 @@ func PlayMoveSafe(col int) error {
 
 	gameMu.Unlock()
 
-	// réinitialisation différée seulement si état a changé
-	if prevState == "En cours" && state != "En cours" {
-		go func() {
-			time.Sleep(3 * time.Second)
-			ResetGame()
-		}()
-	}
-
+	// ne pas réinitialiser ici : la réinitialisation se fera lorsque quelqu'un essaiera
+	// de jouer à nouveau après la victoire (logique gérée ci‑dessus).
 	return err
 }
 
@@ -160,11 +159,11 @@ func SetGame(g *pion.Game) {
 func RenderGrid(w http.ResponseWriter, r *http.Request) {
 	snap := Snapshot()
 
-	// Valeurs par défaut
+	// defaults
 	pawn1 := "/images/pawn1.svg"
 	pawn2 := "/images/pawn2.svg"
 
-	// Récupère les images de pions depuis cookies (utiliser la valeur du cookie)
+	// lire cookies et appliquer si présents
 	if c, err := r.Cookie("pionJoueur1"); err == nil && c.Value != "" {
 		pawn1 = "/images/" + c.Value
 	}
@@ -202,25 +201,6 @@ func Home(w http.ResponseWriter, r *http.Request) {
 		taken = append(taken, c.Value)
 	}
 
-	// --- read selected pawn images and player names from cookies ---
-	pawn1 := "/images/pawn1.svg"
-	pawn2 := "/images/pawn2.svg"
-	name1 := "Joueur 1"
-	name2 := "Joueur 2"
-
-	if c, err := r.Cookie("pionJoueur1"); err == nil && c.Value != "" {
-		pawn1 = "/images/" + c.Value
-	}
-	if c, err := r.Cookie("pionJoueur2"); err == nil && c.Value != "" {
-		pawn2 = "/images/" + c.Value
-	}
-	if c, err := r.Cookie("nomJoueur1"); err == nil && c.Value != "" {
-		name1 = c.Value
-	}
-	if c, err := r.Cookie("nomJoueur2"); err == nil && c.Value != "" {
-		name2 = c.Value
-	}
-
 	type ViewData struct {
 		Title      string
 		Message    string
@@ -243,6 +223,25 @@ func Home(w http.ResponseWriter, r *http.Request) {
 
 	// utilise un snapshot sécurisé du jeu
 	snap := Snapshot()
+
+	// récupère images et noms depuis cookies si présents
+	pawn1 := "/images/pawn1.svg"
+	pawn2 := "/images/pawn2.svg"
+	name1 := "Joueur 1"
+	name2 := "Joueur 2"
+
+	if c, err := r.Cookie("pionJoueur1"); err == nil && c.Value != "" {
+		pawn1 = "/images/" + c.Value
+	}
+	if c, err := r.Cookie("pionJoueur2"); err == nil && c.Value != "" {
+		pawn2 = "/images/" + c.Value
+	}
+	if c, err := r.Cookie("nomJoueur1"); err == nil && c.Value != "" {
+		name1 = c.Value
+	}
+	if c, err := r.Cookie("nomJoueur2"); err == nil && c.Value != "" {
+		name2 = c.Value
+	}
 
 	vd := ViewData{
 		Title:      "Puissance 4",
@@ -289,7 +288,7 @@ func Joueur(w http.ResponseWriter, r *http.Request) {
 			imagesDir := filepath.Join("src", "images")
 			os.MkdirAll(imagesDir, 0755)
 
-			imgName = fmt.Sprintf(joueur)
+			imgName = joueur
 			outPath := filepath.Join(imagesDir, imgName)
 
 			outFile, ferr := os.Create(outPath)
@@ -297,7 +296,7 @@ func Joueur(w http.ResponseWriter, r *http.Request) {
 				defer outFile.Close()
 				io.Copy(outFile, file)
 			} else {
-				imgName = fmt.Sprintf(pionChoisi)
+				imgName = pionChoisi
 			}
 		} else {
 			imgName = fmt.Sprintf(pionChoisi)
