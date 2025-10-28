@@ -160,15 +160,15 @@ func SetGame(g *pion.Game) {
 func RenderGrid(w http.ResponseWriter, r *http.Request) {
 	snap := Snapshot()
 
-	pawn1 := "/images/booba.png"
+	// Valeurs par défaut
+	pawn1 := "/images/pawn1.svg"
 	pawn2 := "/images/pawn2.svg"
 
+	// Récupère les images de pions depuis cookies (utiliser la valeur du cookie)
 	if c, err := r.Cookie("pionJoueur1"); err == nil && c.Value != "" {
-		fmt.Print("coucou", c.Value)
-		pawn1 = "/images/" + "booba.png"
+		pawn1 = "/images/" + c.Value
 	}
 	if c, err := r.Cookie("pionJoueur2"); err == nil && c.Value != "" {
-		fmt.Print("coucou", c.Value)
 		pawn2 = "/images/" + c.Value
 	}
 
@@ -202,6 +202,25 @@ func Home(w http.ResponseWriter, r *http.Request) {
 		taken = append(taken, c.Value)
 	}
 
+	// --- read selected pawn images and player names from cookies ---
+	pawn1 := "/images/pawn1.svg"
+	pawn2 := "/images/pawn2.svg"
+	name1 := "Joueur 1"
+	name2 := "Joueur 2"
+
+	if c, err := r.Cookie("pionJoueur1"); err == nil && c.Value != "" {
+		pawn1 = "/images/" + c.Value
+	}
+	if c, err := r.Cookie("pionJoueur2"); err == nil && c.Value != "" {
+		pawn2 = "/images/" + c.Value
+	}
+	if c, err := r.Cookie("nomJoueur1"); err == nil && c.Value != "" {
+		name1 = c.Value
+	}
+	if c, err := r.Cookie("nomJoueur2"); err == nil && c.Value != "" {
+		name2 = c.Value
+	}
+
 	type ViewData struct {
 		Title      string
 		Message    string
@@ -228,17 +247,17 @@ func Home(w http.ResponseWriter, r *http.Request) {
 	vd := ViewData{
 		Title:      "Puissance 4",
 		Message:    "Bienvenue sur la page d'accueil 🎉",
-		Name1:      "Joueur 1",
-		Name2:      "Joueur 2",
+		Name1:      name1,
+		Name2:      name2,
 		Grid:       snap.Grid,
 		Player:     snap.Player,
 		State:      snap.State,
-		PawnImg1:   "/images/pawn1.svg",
-		PawnImg2:   "/images/pawn2.svg",
+		PawnImg1:   pawn1,
+		PawnImg2:   pawn2,
 		TakenPawns: taken,
 		Score1:     ScoreJoueur1,
 		Score2:     ScoreJoueur2,
-		BoardHTML:  buildBoardHTML(grid), // ✅ pareil ici
+		BoardHTML:  buildBoardHTML(grid),
 	}
 
 	renderTemplate(w, "index.html", vd)
@@ -269,7 +288,6 @@ func Joueur(w http.ResponseWriter, r *http.Request) {
 
 			imagesDir := filepath.Join("src", "images")
 			os.MkdirAll(imagesDir, 0755)
-
 
 			imgName = fmt.Sprintf(joueur)
 			outPath := filepath.Join(imagesDir, imgName)
