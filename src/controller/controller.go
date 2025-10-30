@@ -270,7 +270,6 @@ func Joueur(w http.ResponseWriter, r *http.Request) {
 			imagesDir := filepath.Join("src", "images")
 			os.MkdirAll(imagesDir, 0755)
 
-
 			imgName = fmt.Sprintf(joueur)
 			outPath := filepath.Join(imagesDir, imgName)
 
@@ -329,4 +328,63 @@ func Reset(w http.ResponseWriter, r *http.Request) {
 	}
 
 	http.Redirect(w, r, "/", http.StatusSeeOther)
+}
+
+type Move struct {
+	Col, Row, Player int
+}
+
+type ViewData struct {
+	Players  map[int]string
+	LastMove *Move
+	Winner   int
+}
+// --- 🎵 Rappeurs autorisés = noms de fichiers mp3 dans /sounds (sans extension) ---
+var allowedRappers = map[string]bool{
+	"sdm": true, "kaaris": true, "booba": true, "naps": true, "damso": true,
+	"tiako": true, "leto": true, "plk": true, "niska": true, "jul": true,
+}
+
+func stripExt(filename string) string {
+	i := len(filename) - 1
+	for i >= 0 && filename[i] != '.' && filename[i] != '/' && filename[i] != '\\' {
+		i--
+	}
+	if i >= 0 && filename[i] == '.' {
+		return filename[:i]
+	}
+	return filename
+}
+
+func imgToRapperID(img string) string {
+	id := stripExt(img)       // "booba.png" -> "booba"
+	if allowedRappers[id] {
+		return id
+	}
+	return "booba" // fallback safe
+}
+
+// lastPlayerFromSnap : qui a joué le DERNIER coup ?
+func lastPlayerFromSnap(player int, state string) int {
+	// Dans ton moteur:
+	// - si "En cours" => g.Player a déjà été togglé ⇒ le dernier joueur = l'autre
+	// - si "Victoire ..." => g.Player N'A PAS été togglé ⇒ le dernier joueur = g.Player (le vainqueur)
+	if state == "En cours" {
+		if player == 1 { return 2 }
+		return 1
+	}
+	// si Victoire ou Match nul:
+	return player
+}
+
+// winnerFromState : 0 / 1 / 2 selon LastState
+func winnerFromState(state string) int {
+	switch state {
+	case "Victoire joueur 1":
+		return 1
+	case "Victoire joueur 2":
+		return 2
+	default:
+		return 0
+	}
 }

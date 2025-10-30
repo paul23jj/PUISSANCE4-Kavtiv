@@ -42,16 +42,43 @@
   </div>
 
   <p><a href="/">Retour accueil</a></p>
-</body>
-</html>
-<div id="game-meta"
-     data-last-player="{{if.LastMove}}{{.LastMove.player}}{{else}}0{{end}}"
-     data-winner="{{winner}}">
-  </div> 
 
- <audio id="p1-snd" src="/soundtrack/{{index .Players 1}}.mp3" preload="auto"></audio>
- <audio id="p2-snd" src ="/soundtrack/{{index .players 2}}.mp3" preload="auto"></audio>
+  <div id="game-meta"
+       data-last-player="{{if .LastMove}}{{.LastMove.Player}}{{else}}0{{end}}"
+       data-winner="{{.Winner}}">
+  </div>
 
-<script defer src="/soundtrack/sound.js"></script>
+  <audio id="p1-snd" src="/sounds/{{index .Players 1}}.mp3" preload="auto"></audio>
+  <audio id="p2-snd" src="/sounds/{{index .Players 2}}.mp3" preload="auto"></audio>
+
+  <script>
+  (function () {
+    function q(id){return document.getElementById(id);}
+    function readMeta(){
+      const el = q('game-meta');
+      if(!el) return {last:0,win:0};
+      return {
+        last: parseInt(el.getAttribute('data-last-player')||'0',10)||0,
+        win:  parseInt(el.getAttribute('data-winner')||'0',10)||0
+      };
+    }
+    function play(id){
+      const a = q(id);
+      if(!a) return;
+      try{ a.currentTime = 0; a.play(); }catch(e){}
+    }
+    document.addEventListener('DOMContentLoaded', function(){
+      const meta = readMeta();
+
+      if (meta.win === 0) {
+        if (meta.last === 1) play('p1-snd');
+        else if (meta.last === 2) play('p2-snd');
+      } else {
+        if (meta.win === 1) play('p1-snd');
+        else if (meta.win === 2) play('p2-snd');
+      }
+    });
+  })();
+  </script>
 </body>
 </html>
