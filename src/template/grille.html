@@ -47,41 +47,56 @@
 </div>
 
 <script>
-  // Jouer le son du pion du joueur courant au clic sur les flèches
   (function(){
-    // valeurs injectées par le template
     const pawnImg1 = "{{.PawnImg1}}";
     const pawnImg2 = "{{.PawnImg2}}";
-    const currentPlayer = "{{.Player}}"; // joueur affiché comme "Joueur courant"
+    const currentPlayer = "{{.Player}}";
 
     function getSoundUrlFromPath(path) {
       if (!path) return null;
-      const parts = path.split('/');
-      const base = parts[parts.length - 1];
-      const name = base.split('.').slice(0, -1).join('.') || base;
-      return '/sounds/' + name + '.mp3';
-    }
-
-    function playForPlayer(player) {
-      try {
-        const path = player === '1' ? pawnImg1 : pawnImg2;
-        const url = getSoundUrlFromPath(path);
-        if (url) {
-          const a = new Audio(url);
-          a.currentTime = 0;
-          a.play().catch(()=>{});
-        }
-      } catch (err) {
-        // silent
-      }
+      const base = path.split('/').pop();
+      const name = base.split('.').slice(0, -1).join('.');
+      return '/soundtrack/' + name.toLowerCase() + '.mp3';
     }
 
     document.addEventListener('DOMContentLoaded', () => {
       document.querySelectorAll('.fleches button').forEach(btn => {
         btn.addEventListener('click', (e) => {
-          // utiliser currentPlayer injecté par le serveur — c'est le joueur qui joue en cliquant
-          playForPlayer(currentPlayer);
-          // laisser la soumission du formulaire continuer pour envoyer le coup au serveur
+          e.preventDefault();
+          const form = btn.closest('form') || document.querySelector('form[action="/grille"]');
+
+          function setColAndSubmit(formEl, val) {
+            if (!formEl) return;
+            let hidden = formEl.querySelector('input[name="col"].js-hidden-col');
+            if (!hidden) {
+              hidden = document.createElement('input');
+              hidden.type = 'hidden';
+              hidden.name = 'col';
+              hidden.className = 'js-hidden-col';
+              formEl.appendChild(hidden);
+            }
+            hidden.value = String(val);
+            formEl.submit();
+          }
+
+          // joue le son puis soumet avec la valeur du bouton
+          try {
+            const path = String(currentPlayer) === '1' ? pawnImg1 : pawnImg2;
+            const url = getSoundUrlFromPath(path);
+            if (url) {
+              const audio = new Audio(url);
+              audio.currentTime = 0;
+              audio.play().then(() => {
+                setTimeout(()=> setColAndSubmit(form, btn.value), 80);
+              }).catch(()=> {
+                setTimeout(()=> setColAndSubmit(form, btn.value), 80);
+              });
+              return;
+            }
+          } catch (err) { /* silent */ }
+
+          // pas de son : submit immédiatement avec la valeur
+          setColAndSubmit(form, btn.value);
         });
       });
     });
