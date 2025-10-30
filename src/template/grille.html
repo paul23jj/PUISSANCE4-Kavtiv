@@ -40,52 +40,7 @@
   <div class="scores">
     <strong>Score:</strong> Joueur 1 = {{.Score1}} — Joueur 2 = {{.Score2}}
   </div>
-  <div class="accueil">
-    <form method="post" action="/reset">
-      <button type="submit" name="col" value="7">ACCUEIL</button>
-    </form>
-</div>
 
-<script>
-  // Jouer le son du pion du joueur courant au clic sur les flèches
-  (function(){
-    // valeurs injectées par le template
-    const pawnImg1 = "{{.PawnImg1}}";
-    const pawnImg2 = "{{.PawnImg2}}";
-    const currentPlayer = "{{.Player}}"; // joueur affiché comme "Joueur courant"
-
-    function getSoundUrlFromPath(path) {
-      if (!path) return null;
-      const parts = path.split('/');
-      const base = parts[parts.length - 1];
-      const name = base.split('.').slice(0, -1).join('.') || base;
-      return '/sounds/' + name + '.mp3';
-    }
-
-    function playForPlayer(player) {
-      try {
-        const path = player === '1' ? pawnImg1 : pawnImg2;
-        const url = getSoundUrlFromPath(path);
-        if (url) {
-          const a = new Audio(url);
-          a.currentTime = 0;
-          a.play().catch(()=>{});
-        }
-      } catch (err) {
-        // silent
-      }
-    }
-
-    document.addEventListener('DOMContentLoaded', () => {
-      document.querySelectorAll('.fleches button').forEach(btn => {
-        btn.addEventListener('click', (e) => {
-          // utiliser currentPlayer injecté par le serveur — c'est le joueur qui joue en cliquant
-          playForPlayer(currentPlayer);
-          // laisser la soumission du formulaire continuer pour envoyer le coup au serveur
-        });
-      });
-    });
-  })();
-</script>
+  <p><a href="/reset">Retour accueil</a></p>
 </body>
 </html>
