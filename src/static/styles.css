@@ -197,8 +197,8 @@ body {
 
 /* controls (flèches) */
 .grille .fleches {
-    display: grid;
-    grid-template-columns: repeat(7, 64px);
+    display: flex;
+    justify-content: center;
     gap: 8px;
     margin-bottom: 10px;
 }
@@ -206,11 +206,10 @@ body {
     background: linear-gradient(180deg,#1e6fd8,#145aa8);
     color: #fff;
     border: none;
-    padding: 8px 0;
+    padding: 8px 12px;
     border-radius: 6px;
     cursor: pointer;
     font-size: 16px;
-    width: 11%
 }
 .grille .fleches button:disabled {
     opacity: 0.5;
