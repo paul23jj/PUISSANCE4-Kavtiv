@@ -40,10 +40,98 @@
   <div class="scores">
     <strong>Score:</strong> Joueur 1 = {{.Score1}} — Joueur 2 = {{.Score2}}
   </div>
+<<<<<<< HEAD
+
+  <p><a href="/">Retour accueil</a></p>
+
+  <div id="game-meta"
+       data-last-player="{{if .LastMove}}{{.LastMove.Player}}{{else}}0{{end}}"
+       data-winner="{{.Winner}}">
+  </div>
+
+  <audio id="p1-snd" src="/sounds/{{index .Players 1}}.mp3" preload="auto"></audio>
+  <audio id="p2-snd" src="/sounds/{{index .Players 2}}.mp3" preload="auto"></audio>
+
+  <script>
+  (function () {
+    function q(id){return document.getElementById(id);}
+    function readMeta(){
+      const el = q('game-meta');
+      if(!el) return {last:0,win:0};
+      return {
+        last: parseInt(el.getAttribute('data-last-player')||'0',10)||0,
+        win:  parseInt(el.getAttribute('data-winner')||'0',10)||0
+      };
+    }
+    function play(id){
+      const a = q(id);
+      if(!a) return;
+      try{ a.currentTime = 0; a.play(); }catch(e){}
+    }
+    document.addEventListener('DOMContentLoaded', function(){
+      const meta = readMeta();
+
+      if (meta.win === 0) {
+        if (meta.last === 1) play('p1-snd');
+        else if (meta.last === 2) play('p2-snd');
+      } else {
+        if (meta.win === 1) play('p1-snd');
+        else if (meta.win === 2) play('p2-snd');
+      }
+    });
+  })();
+  </script>
+=======
   <div class="accueil">
     <form method="post" action="/reset">
       <button type="submit" name="col" value="7">ACCUEIL</button>
     </form>
 </div>
+<<<<<<< HEAD
+>>>>>>> a46a1b48dd517050047002aa5d1149cbee389ab1
+=======
+
+<script>
+  // Jouer le son du pion du joueur courant au clic sur les flèches
+  (function(){
+    // valeurs injectées par le template
+    const pawnImg1 = "{{.PawnImg1}}";
+    const pawnImg2 = "{{.PawnImg2}}";
+    const currentPlayer = "{{.Player}}"; // joueur affiché comme "Joueur courant"
+
+    function getSoundUrlFromPath(path) {
+      if (!path) return null;
+      const parts = path.split('/');
+      const base = parts[parts.length - 1];
+      const name = base.split('.').slice(0, -1).join('.') || base;
+      return '/sounds/' + name + '.mp3';
+    }
+
+    function playForPlayer(player) {
+      try {
+        const path = player === '1' ? pawnImg1 : pawnImg2;
+        const url = getSoundUrlFromPath(path);
+        if (url) {
+          const a = new Audio(url);
+          a.currentTime = 0;
+          a.play().catch(()=>{});
+        }
+      } catch (err) {
+        // silent
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      document.querySelectorAll('.fleches button').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          // utiliser currentPlayer injecté par le serveur — c'est le joueur qui joue en cliquant
+          playForPlayer(currentPlayer);
+          // laisser la soumission du formulaire continuer pour envoyer le coup au serveur
+        });
+      });
+    });
+  })();
+</script>
+>>>>>>> ec54da838c57827757a87c9ece63eb3973d6903c
 </body>
 </html>
