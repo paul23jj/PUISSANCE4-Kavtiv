@@ -40,7 +40,10 @@
   <div class="scores">
     <strong>Score:</strong> Joueur 1 = {{.Score1}} — Joueur 2 = {{.Score2}}
   </div>
-
-  <p><a href="/reset">Retour accueil</a></p>
+  <div class="accueil">
+    <form method="post" action="/reset">
+      <button type="submit" name="col" value="7">ACCUEIL</button>
+    </form>
+</div>
 </body>
 </html>

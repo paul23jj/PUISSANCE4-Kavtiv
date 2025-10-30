@@ -197,8 +197,8 @@ body {
 
 /* controls (flèches) */
 .grille .fleches {
-    display: flex;
-    justify-content: center;
+    display: grid;
+    grid-template-columns: repeat(7, 64px);
     gap: 8px;
     margin-bottom: 10px;
 }
@@ -206,10 +206,11 @@ body {
     background: linear-gradient(180deg,#1e6fd8,#145aa8);
     color: #fff;
     border: none;
-    padding: 8px 12px;
+    padding: 8px 0;
     border-radius: 6px;
     cursor: pointer;
     font-size: 16px;
+    width: 11%
 }
 .grille .fleches button:disabled {
     opacity: 0.5;
@@ -277,4 +278,7 @@ body {
     .grille table.grille td { width: 44px; height: 44px; }
     .grille .cell-empty, .grille .pawn { width: 40px; height: 40px; }
     .grille .fleches button { padding: 6px 8px; font-size: 14px; }
+}
+.accueil {
+    background: linear-gradient(180deg,#1e6fd8,#145aa8);
 }
