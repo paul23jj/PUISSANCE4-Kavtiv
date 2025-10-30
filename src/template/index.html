@@ -137,5 +137,44 @@
     .scores { margin-top:8px; }
   </style>
 </head>
+<<<<<<< HEAD
+<body>
+  <h1>Puissance 4</h1>
+  <p>Joueur courant: {{.Player}} — État: {{.State}}</p>
+
+  <form method="post" action="/grille">
+    <p><a href="/grille">Aller au plateau</a></p>
+    <div class="controls">
+      {{range $i := seq 7}}
+        <button type="submit" name="col" value="{{$i}}">▼</button>
+      {{end}}
+    </div>
+  </form>
+
+  <table class="grid" role="grid" aria-label="Plateau Puissance 4">
+    {{range $r := .Grid}}
+      <tr>
+        {{range $c := $r}}
+          <td>
+            {{if eq $c 0}}
+              <div class="cell-empty"></div>
+            {{else if eq $c 1}}
+              <img src="{{$.PawnImg1}}" alt="Pion 1" class="pawn">
+            {{else}}
+              <img src="{{$.PawnImg2}}" alt="Pion 2" class="pawn">
+            {{end}}
+          </td>
+        {{end}}
+      </tr>
+    {{end}}
+  </table>
+
+  <div class="scores">
+    <strong>Score:</strong> Joueur 1 = {{.Score1}} — Joueur 2 = {{.Score2}}
+  </div>
+
+  <p><a href="/">Retour accueil</a></p>
+</body>
 </html>
-g
+=======
+</html>
