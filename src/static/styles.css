@@ -278,3 +278,9 @@ body {
     .grille .cell-empty, .grille .pawn { width: 40px; height: 40px; }
     .grille .fleches button { padding: 6px 8px; font-size: 14px; }
 }
+<<<<<<< HEAD
+=======
+.accueil {
+    background: linear-gradient(180deg,#1e6fd8,#145aa8);
+}
+>>>>>>> a46a1b48dd517050047002aa5d1149cbee389ab1
